@@ -1,0 +1,802 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>uxan 프로젝트 포털 | 모두의 창업 사업기획 아카이브 (정유진)</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Lucide Icons -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <!-- Pretendard Webfont -->
+    <link rel="stylesheet" as="style" crossorigin href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.min.css" />
+    <style>
+        body {
+            font-family: 'Pretendard', -apple-system, BlinkMacSystemFont, system-ui, Roboto, sans-serif;
+            background-color: #f8fafc;
+            color: #0f172a;
+        }
+        .filter-active {
+            background-color: #4f46e5;
+            color: #ffffff;
+            box-shadow: 0 4px 12px rgba(79, 70, 229, 0.25);
+        }
+        .card-hover {
+            transition: all 0.22s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+        .card-hover:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 14px 28px -8px rgba(15, 23, 42, 0.1), 0 4px 10px -4px rgba(15, 23, 42, 0.05);
+        }
+        .modal-backdrop {
+            animation: fadeIn 0.2s ease-out;
+        }
+        .modal-panel {
+            animation: slideUp 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+        @keyframes slideUp {
+            from { opacity: 0; transform: translateY(16px) scale(0.98); }
+            to { opacity: 1; transform: translateY(0) scale(1); }
+        }
+    </style>
+</head>
+<body class="antialiased selection:bg-indigo-100 selection:text-indigo-900 flex flex-col min-h-screen">
+
+    <!-- Top Navigation Bar -->
+    <nav class="bg-slate-950 text-white border-b border-slate-800/80 sticky top-0 z-30">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-14 flex items-center justify-between">
+            <div class="flex items-center gap-2.5">
+                <div class="w-8 h-8 rounded-lg bg-gradient-to-br from-indigo-500 to-emerald-400 flex items-center justify-center shadow">
+                    <i data-lucide="layers" class="w-4 h-4 text-white"></i>
+                </div>
+                <span class="font-bold tracking-tight text-sm sm:text-base">uxan <span class="text-slate-400 font-normal">| 모두의 창업 프로젝트 포털</span></span>
+            </div>
+            <div class="flex items-center gap-2 sm:gap-3">
+                <a href="uxan_startup_dashboard.html" class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-indigo-600 hover:bg-indigo-500 text-xs font-semibold text-white transition shadow-sm">
+                    <i data-lucide="layout-dashboard" class="w-3.5 h-3.5"></i>
+                    <span>대시보드 바로열기</span>
+                </a>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <header class="bg-gradient-to-b from-slate-900 via-slate-900 to-slate-800 text-white border-b border-slate-800">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10 sm:py-12">
+            <!-- Status & Submission Badges -->
+            <div class="flex flex-wrap items-center gap-2 mb-4">
+                <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-bold bg-emerald-500/20 text-emerald-300 border border-emerald-500/30">
+                    <span class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
+                    2026년 11월 · 2단계 소규모 베타 운영 및 완주율 검증 단계
+                </span>
+                <span class="px-2.5 py-1 rounded-full text-xs font-medium bg-indigo-500/20 text-indigo-300 border border-indigo-500/30">
+                    모두의 창업 지원서_uxan (2026.09.16 제출본 기준)
+                </span>
+            </div>
+
+            <!-- Main Title & Subtitle -->
+            <div class="max-w-4xl">
+                <h1 class="text-2xl sm:text-3xl lg:text-4xl font-extrabold tracking-tight leading-snug text-white">
+                    알바 병행 대학생을 위한 <span class="text-transparent bg-clip-text bg-gradient-to-r from-indigo-400 to-emerald-400">5~10분 단위 순서형</span><br class="hidden sm:inline">
+                    영상편집 실습 구독 강의
+                </h1>
+                <p class="mt-3 text-sm sm:text-base text-slate-300 leading-relaxed max-w-3xl">
+                    "커리큘럼 전체를 언제 끝낼지가 아니라, <strong class="text-white">오늘 20분에 무엇을 끝낼지</strong>를 기준으로 설계합니다."<br class="hidden sm:inline">
+                    컷편집·자막 기초를 마이크로 단위로 쪼개어 어제 본 지점부터 즉시 이어보는 실습형 구독 서비스의 전체 산출물 아카이브입니다.
+                </p>
+            </div>
+
+            <!-- Applicant & Program Metadata Bar -->
+            <div class="mt-6 pt-5 border-t border-slate-700/70 grid grid-cols-2 sm:grid-cols-4 gap-3 text-xs sm:text-sm">
+                <div class="bg-slate-800/70 rounded-xl p-3 border border-slate-700/60 flex items-center gap-2.5">
+                    <div class="w-8 h-8 rounded-lg bg-indigo-500/20 text-indigo-400 flex items-center justify-center shrink-0">
+                        <i data-lucide="user-check" class="w-4 h-4"></i>
+                    </div>
+                    <div>
+                        <span class="text-[11px] text-slate-400 block">지원자 (팀 구성)</span>
+                        <span class="font-bold text-white">정유진 <span class="text-xs font-normal text-slate-300">(1인 창업)</span></span>
+                    </div>
+                </div>
+
+                <div class="bg-slate-800/70 rounded-xl p-3 border border-slate-700/60 flex items-center gap-2.5">
+                    <div class="w-8 h-8 rounded-lg bg-emerald-500/20 text-emerald-400 flex items-center justify-center shrink-0">
+                        <i data-lucide="book-open" class="w-4 h-4"></i>
+                    </div>
+                    <div>
+                        <span class="text-[11px] text-slate-400 block">지원 분야 / 트랙</span>
+                        <span class="font-bold text-white">교육 <span class="text-xs font-normal text-slate-300">(일반/기술)</span></span>
+                    </div>
+                </div>
+
+                <div class="bg-slate-800/70 rounded-xl p-3 border border-slate-700/60 flex items-center gap-2.5">
+                    <div class="w-8 h-8 rounded-lg bg-amber-500/20 text-amber-400 flex items-center justify-center shrink-0">
+                        <i data-lucide="map-pin" class="w-4 h-4"></i>
+                    </div>
+                    <div>
+                        <span class="text-[11px] text-slate-400 block">지원 지역</span>
+                        <span class="font-bold text-white">부산광역시</span>
+                    </div>
+                </div>
+
+                <div class="bg-slate-800/70 rounded-xl p-3 border border-slate-700/60 flex items-center gap-2.5">
+                    <div class="w-8 h-8 rounded-lg bg-purple-500/20 text-purple-400 flex items-center justify-center shrink-0">
+                        <i data-lucide="building-2" class="w-4 h-4"></i>
+                    </div>
+                    <div>
+                        <span class="text-[11px] text-slate-400 block">책임멘토 기관</span>
+                        <span class="font-bold text-white">동명대학교</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Portal Content -->
+    <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 space-y-8 flex-1 w-full">
+
+        <!-- 2. Quick Summary KPI Strip -->
+        <section aria-label="핵심 요약 지표">
+            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+                <!-- KPI 1 -->
+                <div class="bg-white rounded-2xl p-4 sm:p-5 border border-slate-200/90 shadow-sm flex items-start gap-3.5">
+                    <div class="w-10 h-10 rounded-xl bg-rose-50 text-rose-600 flex items-center justify-center shrink-0">
+                        <i data-lucide="alert-circle" class="w-5 h-5"></i>
+                    </div>
+                    <div>
+                        <span class="text-xs font-semibold text-slate-500">핵심 시장 문제</span>
+                        <div class="text-xl font-extrabold text-slate-900 mt-0.5">알바 병행률 67.2%</div>
+                        <p class="text-xs text-slate-500 mt-1">학업 지장 54.8% · 주 20h 이하 68.5%</p>
+                    </div>
+                </div>
+
+                <!-- KPI 2 -->
+                <div class="bg-white rounded-2xl p-4 sm:p-5 border border-slate-200/90 shadow-sm flex items-start gap-3.5">
+                    <div class="w-10 h-10 rounded-xl bg-indigo-50 text-indigo-600 flex items-center justify-center shrink-0">
+                        <i data-lucide="scissors" class="w-5 h-5"></i>
+                    </div>
+                    <div>
+                        <span class="text-xs font-semibold text-slate-500">핵심 솔루션 구조</span>
+                        <div class="text-xl font-extrabold text-indigo-600 mt-0.5">5~10분 순서형 실습</div>
+                        <p class="text-xs text-slate-500 mt-1">컷편집·자막 8~10차시 자동 이어보기</p>
+                    </div>
+                </div>
+
+                <!-- KPI 3 -->
+                <div class="bg-white rounded-2xl p-4 sm:p-5 border border-slate-200/90 shadow-sm flex items-start gap-3.5">
+                    <div class="w-10 h-10 rounded-xl bg-emerald-50 text-emerald-600 flex items-center justify-center shrink-0">
+                        <i data-lucide="credit-card" class="w-5 h-5"></i>
+                    </div>
+                    <div>
+                        <span class="text-xs font-semibold text-slate-500">목표 구독 가격</span>
+                        <div class="text-xl font-extrabold text-slate-900 mt-0.5">9,900~12,900원<span class="text-xs font-normal text-slate-500">/월</span></div>
+                        <p class="text-xs text-slate-500 mt-1">1~2강 무료 체험 후 3강부터 유료 전환</p>
+                    </div>
+                </div>
+
+                <!-- KPI 4 -->
+                <div class="bg-white rounded-2xl p-4 sm:p-5 border border-slate-200/90 shadow-sm flex items-start gap-3.5">
+                    <div class="w-10 h-10 rounded-xl bg-amber-50 text-amber-600 flex items-center justify-center shrink-0">
+                        <i data-lucide="target" class="w-5 h-5"></i>
+                    </div>
+                    <div>
+                        <span class="text-xs font-semibold text-slate-500">베타 검증 목표 (11월)</span>
+                        <div class="text-xl font-extrabold text-emerald-600 mt-0.5">완주율 50% 이상</div>
+                        <p class="text-xs text-slate-500 mt-1">모집 20명 내외 · 80% 이상 수강 기준</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 3. Filter & Search Toolbar -->
+        <section class="bg-white rounded-2xl p-4 sm:p-5 border border-slate-200/90 shadow-sm">
+            <div class="flex flex-col md:flex-row md:items-center justify-between gap-4">
+                <!-- Category Filter Buttons -->
+                <div class="flex flex-wrap items-center gap-1.5" role="tablist" aria-label="문서 카테고리 필터">
+                    <button onclick="setFilter('all')" id="filter-all" class="filter-btn filter-active px-3.5 py-2 rounded-xl text-xs sm:text-sm font-semibold transition">
+                        전체 산출물 <span class="ml-1 opacity-80 text-xs">(5)</span>
+                    </button>
+                    <button onclick="setFilter('dashboard')" id="filter-dashboard" class="filter-btn text-slate-600 hover:bg-slate-100 px-3.5 py-2 rounded-xl text-xs sm:text-sm font-semibold transition">
+                        대시보드
+                    </button>
+                    <button onclick="setFilter('plan')" id="filter-plan" class="filter-btn text-slate-600 hover:bg-slate-100 px-3.5 py-2 rounded-xl text-xs sm:text-sm font-semibold transition">
+                        사업계획서
+                    </button>
+                    <button onclick="setFilter('mentoring')" id="filter-mentoring" class="filter-btn text-slate-600 hover:bg-slate-100 px-3.5 py-2 rounded-xl text-xs sm:text-sm font-semibold transition">
+                        멘토링·검증
+                    </button>
+                </div>
+
+                <!-- Live Keyword Search Input -->
+                <div class="relative w-full md:w-80">
+                    <i data-lucide="search" class="w-4 h-4 text-slate-400 absolute left-3.5 top-1/2 -translate-y-1/2"></i>
+                    <input
+                        type="text"
+                        id="searchInput"
+                        oninput="filterDocuments()"
+                        placeholder="문서명, Q2~Q8 항목, 통계 키워드 검색..."
+                        class="w-full pl-10 pr-9 py-2 text-xs sm:text-sm bg-slate-50 border border-slate-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:bg-white transition"
+                    >
+                    <button id="clearSearchBtn" onclick="clearSearch()" class="hidden absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600">
+                        <i data-lucide="x" class="w-4 h-4"></i>
+                    </button>
+                </div>
+            </div>
+        </section>
+
+        <!-- 4. Project Documents & Dashboard Index Cards Grid -->
+        <section aria-label="프로젝트 문서 및 대시보드 인덱스">
+            <div id="cardsGrid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
+                <!-- Cards rendered dynamically via JS -->
+            </div>
+
+            <!-- Empty Search State -->
+            <div id="emptyState" class="hidden bg-white rounded-2xl p-12 border border-slate-200 text-center">
+                <div class="w-12 h-12 rounded-2xl bg-slate-100 text-slate-400 flex items-center justify-center mx-auto mb-3">
+                    <i data-lucide="search-x" class="w-6 h-6"></i>
+                </div>
+                <h3 class="text-base font-bold text-slate-800">일치하는 산출물이 없습니다</h3>
+                <p class="text-xs text-slate-500 mt-1">다른 키워드(예: 완주율, 동명대학교, Q3-2, 알바몬)로 검색하거나 필터를 초기화해 주세요.</p>
+                <button onclick="resetAllFilters()" class="mt-4 px-4 py-2 rounded-xl bg-indigo-600 text-white text-xs font-semibold hover:bg-indigo-500 transition">
+                    전체 목록 보기
+                </button>
+            </div>
+        </section>
+
+    </main>
+
+    <!-- 5. Deployment & Folder Structure Guide Footer -->
+    <footer class="bg-slate-900 text-slate-300 border-t border-slate-800 mt-12">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+            <div class="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
+                <!-- Left Info -->
+                <div class="lg:col-span-7 space-y-2">
+                    <div class="flex items-center gap-2 text-white font-bold text-sm">
+                        <i data-lucide="folder-git-2" class="w-4 h-4 text-emerald-400"></i>
+                        <span>정적 웹 배포(GitHub Pages / Vercel / Netlify) 폴더 구성 안내</span>
+                    </div>
+                    <p class="text-xs text-slate-400 leading-relaxed">
+                        본 인덱스 페이지(<code class="text-emerald-300 bg-slate-800 px-1.5 py-0.5 rounded">index.html</code>)와 인터랙티브 대시보드(<code class="text-indigo-300 bg-slate-800 px-1.5 py-0.5 rounded">uxan_startup_dashboard.html</code>)를 동일한 루트 디렉토리에 배치하면 별도의 빌드 설정 없이 즉시 웹 링크로 공유 및 IR 발표에 활용할 수 있습니다.
+                    </p>
+                    <div class="pt-2 text-xs text-slate-500">
+                        © 2026 모두의 창업 과제제출 아카이브 · 지원자 <strong>정유진</strong> (지원서_uxan · 부산 · 동명대학교)
+                    </div>
+                </div>
+
+                <!-- Right Folder Tree Box -->
+                <div class="lg:col-span-5 bg-slate-950 rounded-xl p-4 border border-slate-800 font-mono text-xs text-slate-300">
+                    <div class="flex items-center justify-between text-[11px] text-slate-500 pb-2 mb-2 border-b border-slate-800">
+                        <span>📁 uxan-startup-portal/ (Root Directory)</span>
+                        <span class="text-emerald-400">Static Ready</span>
+                    </div>
+                    <ul class="space-y-1.5">
+                        <li class="flex items-center justify-between">
+                            <span>├── <strong class="text-emerald-400">index.html</strong></span>
+                            <span class="text-[11px] text-slate-500">메인 포털 & 산출물 아카이브 (현재 파일)</span>
+                        </li>
+                        <li class="flex items-center justify-between">
+                            <span>└── <strong class="text-indigo-400">uxan_startup_dashboard.html</strong></span>
+                            <span class="text-[11px] text-slate-500">KPI · 매출 시뮬레이터 · 커리큘럼 대시보드</span>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <!-- ===================================================================== -->
+    <!-- Detail Briefing Modal Viewer                                          -->
+    <!-- ===================================================================== -->
+    <div id="detailModal" class="hidden fixed inset-0 z-50 overflow-y-auto" role="dialog" aria-modal="true" aria-labelledby="modalTitle">
+        <!-- Backdrop -->
+        <div onclick="closeModal()" class="modal-backdrop fixed inset-0 bg-slate-950/65 backdrop-blur-xs"></div>
+
+        <!-- Modal Container -->
+        <div class="flex min-h-full items-center justify-center p-4 sm:p-6">
+            <div class="modal-panel relative w-full max-w-3xl bg-white rounded-2xl shadow-2xl border border-slate-200 overflow-hidden z-10">
+                <!-- Modal Top Header -->
+                <div class="bg-slate-900 text-white px-6 py-5 flex items-start justify-between gap-4">
+                    <div>
+                        <div class="flex flex-wrap items-center gap-2 mb-1.5">
+                            <span id="modalNumber" class="px-2 py-0.5 text-xs font-extrabold rounded bg-indigo-500 text-white">01</span>
+                            <span id="modalCategoryBadge" class="px-2.5 py-0.5 text-xs font-semibold rounded-full bg-slate-800 text-emerald-300 border border-slate-700">카테고리</span>
+                            <span id="modalFileBadge" class="text-xs font-mono text-slate-400">filename</span>
+                        </div>
+                        <h3 id="modalTitle" class="text-lg sm:text-xl font-bold text-white leading-snug">문서 제목</h3>
+                    </div>
+                    <button onclick="closeModal()" class="p-1.5 rounded-lg bg-slate-800 text-slate-400 hover:text-white hover:bg-slate-700 transition" aria-label="모달 닫기">
+                        <i data-lucide="x" class="w-5 h-5"></i>
+                    </button>
+                </div>
+
+                <!-- Modal Body -->
+                <div class="p-6 max-h-[70vh] overflow-y-auto space-y-5">
+                    <!-- Summary Callout -->
+                    <div class="p-4 rounded-xl bg-indigo-50/70 border border-indigo-100 text-xs sm:text-sm text-slate-800 leading-relaxed" id="modalSummary">
+                        요약 설명
+                    </div>
+
+                    <!-- Structured Details List -->
+                    <div id="modalSections" class="space-y-4">
+                        <!-- Dynamic Content -->
+                    </div>
+                </div>
+
+                <!-- Modal Bottom Actions -->
+                <div class="bg-slate-50 px-6 py-4 border-t border-slate-200 flex flex-col sm:flex-row items-center justify-between gap-3">
+                    <div id="copyFeedback" class="text-xs font-semibold text-emerald-600 hidden flex items-center gap-1">
+                        <i data-lucide="check-circle-2" class="w-4 h-4"></i>
+                        <span>브리핑 내용이 클립보드에 복사되었습니다!</span>
+                    </div>
+                    <div class="flex items-center gap-2.5 w-full sm:w-auto justify-end ml-auto">
+                        <button onclick="copyModalBriefing()" class="inline-flex items-center justify-center gap-1.5 px-4 py-2.5 rounded-xl border border-slate-300 bg-white hover:bg-slate-100 text-xs font-semibold text-slate-700 transition">
+                            <i data-lucide="copy" class="w-3.5 h-3.5"></i>
+                            <span>브리핑 텍스트 복사</span>
+                        </button>
+                        <a id="modalPrimaryAction" href="uxan_startup_dashboard.html" class="inline-flex items-center justify-center gap-1.5 px-4 py-2.5 rounded-xl bg-indigo-600 hover:bg-indigo-500 text-xs font-semibold text-white shadow-sm transition">
+                            <i data-lucide="external-link" class="w-3.5 h-3.5"></i>
+                            <span id="modalPrimaryActionText">대시보드 페이지 열기</span>
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- JavaScript Data & Interactions -->
+    <script>
+        // Structured Index Data based on 정유진 '모두의 창업 지원서_uxan'
+        const documentsData = [
+            {
+                id: 'doc-01',
+                number: '01',
+                category: 'dashboard',
+                categoryLabel: '대시보드',
+                title: '인터랙티브 사업기획 대시보드',
+                subtitle: 'uxan_startup_dashboard.html',
+                fileType: 'HTML5 Single-File App',
+                description: '시장 실태조사 시각화(Chart.js), 월 구독료·가입자 실시간 매출 시뮬레이터, 8차시 이어보기 완주율 체크리스트, 동명대 멘토링 의사결정 트래커를 통합한 실행형 대시보드입니다.',
+                highlights: [
+                    '구독 매출 실시간 시뮬레이터 (시나리오 A: 3,096만 원 / B: 1,188만 원)',
+                    'MVP 8차시 컷편집·자막 실습 체크리스트 & 완주율(80%↑) 게이지',
+                    '경쟁사 5개사(유튜브·클래스101+·탈잉·크몽·숨고) 포지셔닝 비교표'
+                ],
+                linkUrl: 'uxan_startup_dashboard.html',
+                linkLabel: 'uxan_startup_dashboard.html 열기',
+                isExternalFile: true,
+                modalDetails: [
+                    {
+                        heading: '포함된 4대 인터랙티브 모듈',
+                        items: [
+                            '탭 1 (시장 문제 & 경쟁사 비교): 알바몬(4,273명)·SW정책연구소 통계 차트 및 6개 서비스 비교 매트릭스',
+                            '탭 2 (수익 모델 & 매출 시뮬레이터): 월 구독료(5,900~19,900원) 및 구독자(20~500명) 조절 시 MRR·ARR·필요 유입수 실시간 산출',
+                            '탭 3 (3단계 로드맵 & MVP 커리큘럼): 2026년 10~12월 실행 일정 및 8차시(총 64분) 클릭형 이어보기 체험',
+                            '탭 4 (동명대 책임멘토링 핵심과제): 4대 멘토링 질문별 옵션 A/B 선택 및 의사결정 완료 카운터'
+                        ]
+                    },
+                    {
+                        heading: '활용 가이드',
+                        items: [
+                            '책임멘토링 미팅 및 IR 발표 시 브라우저로 열어 실시간 수치 시뮬레이션 시연 가능',
+                            'index.html과 같은 폴더에 위치 시 상단 네비게이션 및 본 카드에서 즉시 이동'
+                        ]
+                    }
+                ]
+            },
+            {
+                id: 'doc-02',
+                number: '02',
+                category: 'plan',
+                categoryLabel: '사업계획서',
+                title: '모두의 창업 지원서 원문 요약 (Q2 ~ Q8)',
+                subtitle: '지원서_uxan · 문항별 구조화 아카이브',
+                fileType: 'Q2 · Q3 · Q4 · Q8 원문 브리핑',
+                description: '2026년 9월 16일 제출된 지원서의 핵심 논리를 배경(Q2), 차별점(Q3-1), 수익창출(Q3-2), 사업화 로드맵(Q4-1), 멘토링 요청(Q4-2), 창업자 역량(Q8) 순으로 정리한 원문 요약본입니다.',
+                highlights: [
+                    'Q2 배경: 카페 알바와 미디어콘텐츠학과 영상 팀플 병행 중 직접 겪은 문제',
+                    'Q3-2 수익: 서울 소재 대학 2~3학년(주 15h↑ 알바) 타겟 월 12,900원 구독',
+                    'Q8 역량: 타겟 고객과 동일한 상황의 당사자 공감 역량 및 사용자 관점 설계'
+                ],
+                linkUrl: 'uxan_startup_dashboard.html',
+                linkLabel: '대시보드에서 전체 지표 확인',
+                isExternalFile: false,
+                modalDetails: [
+                    {
+                        heading: 'Q2. 창업 배경 및 문제 인식',
+                        items: [
+                            '카페 알바와 학과 팀플 영상 편집 과제를 병행하며 짧은 영상 제작에도 긴 시간이 소요됨을 경험',
+                            '기존 무료 자료는 광고 위주이거나 길이가 길어 과제·실무에 바로 적용하기 어려움',
+                            '대학생 10명 중 6명 이상(67.2%)이 알바를 병행하고, 이 중 54.8%가 학업 지장을 호소하는 구조적 문제 포착'
+                        ]
+                    },
+                    {
+                        heading: 'Q3-1 & Q3-2. 차별점 및 수익 모델',
+                        items: [
+                            '긴 단위·비순차적 기존 강의와 달리 5~10분 마이크로 단위 + 순서 고정 + 어제 본 지점 이어보기 구조 채택',
+                            '1~2강 무료 체험으로 유입·검증 후 3강부터 유료 구독 전환 (목표가 월 12,900원 × 200명 = 연 3,096만 원 / 베타 보수안 월 9,900원 × 100명 = 연 1,188만 원)',
+                            '향후 완주자 대상 1:1 포트폴리오 첨삭 피드백 및 대학 취업센터 B2B 단체 구독으로 확장'
+                        ]
+                    },
+                    {
+                        heading: 'Q4-1 & Q8. 사업화 검증 목표 및 창업자 역량',
+                        items: [
+                            '2026년 10~12월 시범 운영: 20명 내외 모집 후 전체 8~10차시 중 80% 이상 수강 완주율 50% 이상 달성 목표',
+                            '미디어콘텐츠학과 재학생으로서 직접 겪은 학습 이탈 지점을 기준으로 커리큘럼 단위와 순서를 정교하게 설계'
+                        ]
+                    }
+                ]
+            },
+            {
+                id: 'doc-03',
+                number: '03',
+                category: 'plan',
+                categoryLabel: '사업계획서',
+                title: '베타 테스트 & 커리큘럼 설계서 (MVP 8~10차시)',
+                subtitle: '컷편집·자막 5~10분 시퀀싱 & 이어보기 UX',
+                fileType: 'Curriculum & UX Spec',
+                description: '알바 종료 후 하루 20분 이내에 1~2개 실습을 완결할 수 있도록 쪼갠 컷편집·자막 기초 커리큘럼 구조와 탐색 시간 0분 달성을 위한 이어보기 학습 흐름 설계서입니다.',
+                highlights: [
+                    '10월: 5~10분 단위 영상 8~10편 제작 및 실습 과제 소스 패키지 구성',
+                    '11월: 20명 내외 소규모 베타 운영 → 중반부 이탈 돌파 및 완주율 50%↑ 검증',
+                    '12월~: 피드백 반영 고도화 및 저가 구독 요금제(9,900원~) 결제 의사 테스트'
+                ],
+                linkUrl: 'uxan_startup_dashboard.html',
+                linkLabel: '대시보드에서 8차시 체크리스트 체험',
+                isExternalFile: false,
+                modalDetails: [
+                    {
+                        heading: '커리큘럼 설계 3대 원칙',
+                        items: [
+                            '시간 단위 제한: 모든 회차를 5~10분 내외로 제한하여 집중력 저하(28.1%) 방지',
+                            '선형 순서 고정: "어디부터 볼지" 고민하는 탐색 시간을 없애기 위해 기초부터 완성까지 단일 경로로 배치',
+                            '즉각적 실습 중심: 긴 이론 설명을 배제하고 시청 직후 손으로 따라 해보는 과제 중심으로 포트폴리오 결과물 확보'
+                        ]
+                    },
+                    {
+                        heading: 'MVP 8차시 세부 구성안 (총 64분)',
+                        items: [
+                            '[무료 체험] 1강 작업 환경 & 단축키 5개(6분) → 2강 무음 구간 0.5초 컷편집(8분)',
+                            '[유료 구독] 3강 숏폼 컷 리듬 & 줌인/아웃(9분) → 4강 J컷·L컷 오디오 연결(8분) → 5강 기본 자막 바 & 폰트 위계(7분) → 6강 포인트 애니메이션 자막(9분) → 7강 BGM 밸런싱 & 효과음(8분)',
+                            '[완주 미션] 8강 최종 렌더링 & SNS/취업 포트폴리오용 릴스 1편 추출(9분)'
+                        ]
+                    }
+                ]
+            },
+            {
+                id: 'doc-04',
+                number: '04',
+                category: 'mentoring',
+                categoryLabel: '멘토링·검증',
+                title: '동명대학교 책임멘토링 미팅 노트 & 의사결정 가이드',
+                subtitle: 'Q4-2 책임멘토 요청사항 · 4대 핵심 질문 비교표',
+                fileType: 'Mentoring Agenda & Options',
+                description: '동명대학교 책임멘토링을 통해 검증받고자 하는 4가지 핵심 병목(커리큘럼 분할 기준, 유료 전환 경계선, 초기 20~30명 확보 채널, 완주 유도 장치)의 선택지 비교 가이드입니다.',
+                highlights: [
+                    '과제 1: 기능별 분할(컷→자막) vs 완성 결과물별 분할(릴스 1편→브이로그 1편)',
+                    '과제 2: 무료 유튜브 대비 월 구독료를 정당화할 최소 피드백·커뮤니티 기준',
+                    '과제 3·4: 에브리타임·알바 플랫폼·SNS 채널 우선순위 및 완주 알림 레퍼런스'
+                ],
+                linkUrl: 'uxan_startup_dashboard.html',
+                linkLabel: '대시보드 멘토링 트래커 열기',
+                isExternalFile: false,
+                modalDetails: [
+                    {
+                        heading: '1. 커리큘럼 순서 설계 기준 (시퀀싱)',
+                        items: [
+                            '옵션 A (기능 중심): 컷편집 → 자막 → 오디오 순으로 기초 기능 숙련도를 순차 적층',
+                            '옵션 B (결과물 중심): 30초 릴스 1편 완성 → 브이로그 1편 완성 단위로 즉각적 성취감 부여',
+                            '멘토링 요청: 알바 병행 대학생의 중도 이탈을 최소화하는 교육학적 시퀀싱 기준 자문'
+                        ]
+                    },
+                    {
+                        heading: '2. 무료 유튜브 대비 유료 전환 경계선',
+                        items: [
+                            '단순 영상 시청을 넘어 구독료(9,900~12,900원) 지불 의사를 이끌어낼 최소 실습 피드백 범위 설정',
+                            '실습 원본 소스팩 제공, 과제 체크리스트 피드백, 주간 스터디 인증방 포함 여부 검토'
+                        ]
+                    },
+                    {
+                        heading: '3 & 4. 초기 고객 20~30명 확보 채널 & 완주 유도 장치',
+                        items: [
+                            '저예산 빠른 검증을 위한 채널 우선순위 결정: 대학 커뮤니티(에브리타임) vs SNS 릴스 광고 vs 알바 플랫폼 제휴',
+                            '짧은 시간 내 진도율을 시각적으로 체감하고 알바 퇴근 시간에 학습을 환기하는 알림·체크리스트 레퍼런스 확보'
+                        ]
+                    }
+                ]
+            },
+            {
+                id: 'doc-05',
+                number: '05',
+                category: 'mentoring',
+                categoryLabel: '멘토링·검증',
+                title: 'IR / 발표용 핵심 팩트시트 & 출처 데이터 모음',
+                subtitle: '공신력 있는 4대 외부 통계 및 시장 벤치마크 근거',
+                fileType: 'Market Research Fact Sheet',
+                description: '사업계획서 및 발표 자료에서 문제의 심각성과 마이크로러닝 솔루션의 타당성을 뒷받침하는 알바몬, 알바천국, SW정책연구소, IMARC의 핵심 통계 수치를 정리한 팩트시트입니다.',
+                highlights: [
+                    '알바몬(4,273명): 대학생 알바 병행률 67.2%, 병행자 중 학업 지장 응답 54.8%',
+                    '알바천국: 주 20시간 이하 근무 계획 68.5% / 3학년 72.5% · 2학년 68.7%',
+                    'SW정책연구소 & IMARC: 이러닝 불편 1위 집중력 저하 28.1% / CAGR 15.73%'
+                ],
+                linkUrl: 'uxan_startup_dashboard.html',
+                linkLabel: '대시보드 데이터 차트 보기',
+                isExternalFile: false,
+                modalDetails: [
+                    {
+                        heading: '1. 타겟 고객 규모 및 페인포인트 통계',
+                        items: [
+                            '알바몬 조사 (대학생 4,273명 대상, 캠퍼스잡앤조이 보도): 대학생 10명 중 6명 이상(67.2%)이 학업과 아르바이트를 병행하며, 이 중 54.8%는 학업에 지장이 있을 정도로 힘들다고 응답',
+                            '알바천국 조사: 아르바이트 계획 대학생 중 주 20시간 이하 근무 계획 비율 68.5%, 학년별 병행 비율은 3학년 72.5% · 2학년 68.7%로 타겟 고객군(2~3학년) 집중도 입증'
+                        ]
+                    },
+                    {
+                        heading: '2. 마이크로러닝 트렌드 및 이러닝 시장 근거',
+                        items: [
+                            'SW정책연구소 「2023년 국내 이러닝산업 실태조사」: 개인 이러닝 이용자 불편사항 1순위는 "학습 집중력 저하"(28.1%) → 5~10분 단위 분할의 직접적 근거',
+                            '글로벌 시장조사기관 IMARC (2025): 모바일 중심 마이크로러닝(Bite-sized Learning) 시장 연평균 성장률(CAGR) 15.73%로 가장 빠른 성장 전망 및 짧은 집중 시간 학습자의 유지율 향상 입증'
+                        ]
+                    },
+                    {
+                        heading: '3. 경쟁사 가격 벤치마크 근거',
+                        items: [
+                            '클래스101+: 145개 이상 카테고리 6,400개 클래스 연 169,000~199,000원(월 환산 약 16,600원)',
+                            '탈잉(그룹 3시간 9만 원), 크몽(원데이 180분 10만 원), 숨고(1:1 시간당 평균 5만 원) 대비 압도적인 시간·비용 접근성 확보'
+                        ]
+                    }
+                ]
+            }
+        ];
+
+        let currentCategory = 'all';
+        let activeModalDoc = null;
+
+        // Render Cards Function
+        function renderCards(docs) {
+            const grid = document.getElementById('cardsGrid');
+            const emptyState = document.getElementById('emptyState');
+            grid.innerHTML = '';
+
+            if (docs.length === 0) {
+                grid.classList.add('hidden');
+                emptyState.classList.remove('hidden');
+                return;
+            }
+
+            grid.classList.remove('hidden');
+            emptyState.classList.add('hidden');
+
+            docs.forEach(doc => {
+                const badgeStyles = {
+                    dashboard: 'bg-indigo-100 text-indigo-700 border-indigo-200',
+                    plan: 'bg-emerald-100 text-emerald-700 border-emerald-200',
+                    mentoring: 'bg-amber-100 text-amber-800 border-amber-200'
+                };
+
+                const isDashboardCard = doc.id === 'doc-01';
+
+                const card = document.createElement('article');
+                card.className = `card-hover bg-white rounded-2xl p-6 border ${
+                    isDashboardCard ? 'border-indigo-300 ring-2 ring-indigo-500/10' : 'border-slate-200/90'
+                } shadow-sm flex flex-col justify-between cursor-pointer`;
+                card.onclick = () => openModal(doc.id);
+
+                card.innerHTML = `
+                    <div>
+                        <!-- Top Meta Row -->
+                        <div class="flex items-center justify-between gap-2 mb-3.5">
+                            <div class="flex items-center gap-2">
+                                <span class="w-7 h-7 rounded-lg ${isDashboardCard ? 'bg-indigo-600 text-white' : 'bg-slate-900 text-white'} text-xs font-extrabold flex items-center justify-center">
+                                    ${doc.number}
+                                </span>
+                                <span class="px-2.5 py-0.5 text-xs font-bold rounded-full border ${badgeStyles[doc.category]}">
+                                    ${doc.categoryLabel}
+                                </span>
+                            </div>
+                            <span class="text-[11px] font-mono text-slate-400 bg-slate-50 px-2 py-0.5 rounded border border-slate-100">
+                                ${doc.fileType}
+                            </span>
+                        </div>
+
+                        <!-- Title & Subtitle -->
+                        <h2 class="text-base sm:text-lg font-bold text-slate-900 leading-snug group-hover:text-indigo-600">
+                            ${doc.title}
+                        </h2>
+                        <p class="text-xs font-mono text-indigo-600 mt-1">${doc.subtitle}</p>
+
+                        <!-- Description -->
+                        <p class="text-xs sm:text-sm text-slate-600 mt-3 leading-relaxed">
+                            ${doc.description}
+                        </p>
+
+                        <!-- Key Highlights Box -->
+                        <ul class="mt-4 pt-3.5 border-t border-slate-100 space-y-1.5">
+                            ${doc.highlights.map(item => `
+                                <li class="flex items-start gap-2 text-xs text-slate-700">
+                                    <span class="w-1.5 h-1.5 rounded-full ${isDashboardCard ? 'bg-indigo-500' : 'bg-emerald-500'} mt-1.5 shrink-0"></span>
+                                    <span>${item}</span>
+                                </li>
+                            `).join('')}
+                        </ul>
+                    </div>
+
+                    <!-- Card Action Footer -->
+                    <div class="mt-5 pt-3.5 border-t border-slate-100 flex items-center justify-between gap-2">
+                        <span class="text-xs font-semibold text-slate-500 hover:text-indigo-600 inline-flex items-center gap-1">
+                            상세 브리핑 보기
+                            <i data-lucide="chevron-right" class="w-3.5 h-3.5"></i>
+                        </span>
+                        ${isDashboardCard ? `
+                            <a href="uxan_startup_dashboard.html" onclick="event.stopPropagation()" class="inline-flex items-center gap-1 px-3 py-1.5 rounded-lg bg-indigo-600 hover:bg-indigo-500 text-xs font-semibold text-white transition shadow-xs">
+                                <span>실행하기</span>
+                                <i data-lucide="arrow-up-right" class="w-3.5 h-3.5"></i>
+                            </a>
+                        ` : `
+                            <span class="text-[11px] font-medium text-slate-400">클릭하여 열람</span>
+                        `}
+                    </div>
+                `;
+                grid.appendChild(card);
+            });
+
+            lucide.createIcons();
+        }
+
+        // Category Filter Handler
+        function setFilter(category) {
+            currentCategory = category;
+
+            document.querySelectorAll('.filter-btn').forEach(btn => {
+                btn.classList.remove('filter-active');
+                btn.classList.add('text-slate-600', 'hover:bg-slate-100');
+            });
+
+            const activeBtn = document.getElementById(`filter-${category}`);
+            activeBtn.classList.add('filter-active');
+            activeBtn.classList.remove('text-slate-600', 'hover:bg-slate-100');
+
+            filterDocuments();
+        }
+
+        // Combined Category + Keyword Search Filter
+        function filterDocuments() {
+            const rawQuery = document.getElementById('searchInput').value.trim();
+            const query = rawQuery.toLowerCase();
+            const clearBtn = document.getElementById('clearSearchBtn');
+
+            if (rawQuery.length > 0) {
+                clearBtn.classList.remove('hidden');
+            } else {
+                clearBtn.classList.add('hidden');
+            }
+
+            const filtered = documentsData.filter(doc => {
+                const matchesCategory = currentCategory === 'all' || doc.category === currentCategory;
+                if (!matchesCategory) return false;
+
+                if (!query) return true;
+
+                const searchableText = [
+                    doc.title,
+                    doc.subtitle,
+                    doc.categoryLabel,
+                    doc.description,
+                    ...doc.highlights,
+                    ...doc.modalDetails.flatMap(sec => [sec.heading, ...sec.items])
+                ].join(' ').toLowerCase();
+
+                return searchableText.includes(query);
+            });
+
+            renderCards(filtered);
+        }
+
+        function clearSearch() {
+            document.getElementById('searchInput').value = '';
+            filterDocuments();
+        }
+
+        function resetAllFilters() {
+            document.getElementById('searchInput').value = '';
+            setFilter('all');
+        }
+
+        // Modal Viewer Functions
+        function openModal(docId) {
+            const doc = documentsData.find(d => d.id === docId);
+            if (!doc) return;
+
+            activeModalDoc = doc;
+            document.getElementById('copyFeedback').classList.add('hidden');
+
+            document.getElementById('modalNumber').textContent = doc.number;
+            document.getElementById('modalCategoryBadge').textContent = doc.categoryLabel;
+            document.getElementById('modalFileBadge').textContent = doc.subtitle;
+            document.getElementById('modalTitle').textContent = doc.title;
+            document.getElementById('modalSummary').textContent = doc.description;
+
+            const actionBtn = document.getElementById('modalPrimaryAction');
+            const actionText = document.getElementById('modalPrimaryActionText');
+            actionBtn.href = doc.linkUrl;
+            actionText.textContent = doc.linkLabel;
+
+            const sectionsContainer = document.getElementById('modalSections');
+            sectionsContainer.innerHTML = doc.modalDetails.map(sec => `
+                <div class="bg-slate-50 rounded-xl p-4 border border-slate-200/80">
+                    <h4 class="text-xs sm:text-sm font-bold text-slate-900 mb-2.5 flex items-center gap-1.5">
+                        <span class="w-1.5 h-4 rounded-full bg-indigo-600 inline-block"></span>
+                        ${sec.heading}
+                    </h4>
+                    <ul class="space-y-2 text-xs sm:text-sm text-slate-700">
+                        ${sec.items.map(item => `
+                            <li class="flex items-start gap-2 leading-relaxed">
+                                <span class="text-emerald-600 font-bold mt-0.5">✓</span>
+                                <span>${item}</span>
+                            </li>
+                        `).join('')}
+                    </ul>
+                </div>
+            `).join('');
+
+            document.getElementById('detailModal').classList.remove('hidden');
+            document.body.style.overflow = 'hidden';
+            lucide.createIcons();
+        }
+
+        function closeModal() {
+            document.getElementById('detailModal').classList.add('hidden');
+            document.body.style.overflow = '';
+            activeModalDoc = null;
+        }
+
+        // Copy Briefing Text using document.execCommand('copy') for iframe compatibility
+        function copyModalBriefing() {
+            if (!activeModalDoc) return;
+
+            const lines = [
+                `[모두의 창업 · uxan 프로젝트 산출물 #${activeModalDoc.number}]`,
+                `제목: ${activeModalDoc.title} (${activeModalDoc.subtitle})`,
+                `요약: ${activeModalDoc.description}`,
+                '',
+                ...activeModalDoc.modalDetails.flatMap(sec => [
+                    `■ ${sec.heading}`,
+                    ...sec.items.map(i => `  - ${i}`),
+                    ''
+                ])
+            ];
+
+            const textArea = document.createElement('textarea');
+            textArea.value = lines.join('\n');
+            textArea.style.position = 'fixed';
+            textArea.style.left = '-9999px';
+            document.body.appendChild(textArea);
+            textArea.select();
+
+            try {
+                document.execCommand('copy');
+                const feedback = document.getElementById('copyFeedback');
+                feedback.classList.remove('hidden');
+                lucide.createIcons();
+            } catch (err) {
+                console.error('복사 실패:', err);
+            } finally {
+                document.body.removeChild(textArea);
+            }
+        }
+
+        // Keyboard ESC to close modal
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape' && !document.getElementById('detailModal').classList.contains('hidden')) {
+                closeModal();
+            }
+        });
+
+        // Initial Render
+        window.addEventListener('DOMContentLoaded', () => {
+            renderCards(documentsData);
+        });
+    </script>
+</body>
+</html>

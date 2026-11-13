@@ -1,0 +1,1072 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>모두의 창업 사업기획 대시보드 | uxan (정유진)</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Chart.js -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <!-- Lucide Icons -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <!-- Google Fonts: Pretendard & Inter -->
+    <link rel="stylesheet" as="style" crossorigin href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.min.css" />
+    <style>
+        body {
+            font-family: 'Pretendard', -apple-system, BlinkMacSystemFont, system-ui, Roboto, sans-serif;
+            background-color: #f8fafc;
+            color: #0f172a;
+        }
+        /* Custom Range Slider */
+        input[type=range] {
+            -webkit-appearance: none;
+            background: transparent;
+        }
+        input[type=range]::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            height: 20px;
+            width: 20px;
+            border-radius: 50%;
+            background: #4f46e5;
+            cursor: pointer;
+            margin-top: -7px;
+            box-shadow: 0 2px 6px rgba(79, 70, 229, 0.4);
+            transition: transform 0.15s ease;
+        }
+        input[type=range]::-webkit-slider-thumb:hover {
+            transform: scale(1.15);
+        }
+        input[type=range]::-webkit-slider-runnable-track {
+            width: 100%;
+            height: 6px;
+            cursor: pointer;
+            background: #e2e8f0;
+            border-radius: 999px;
+        }
+        .tab-active {
+            background-color: #4f46e5;
+            color: #ffffff;
+            box-shadow: 0 4px 12px rgba(79, 70, 229, 0.25);
+        }
+        .fade-in {
+            animation: fadeIn 0.3s ease-in-out;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(6px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+    </style>
+</head>
+<body class="antialiased selection:bg-indigo-100 selection:text-indigo-900">
+
+    <!-- Top Dark Slate Navigation & Hero Header -->
+    <header class="bg-slate-900 text-white border-b border-slate-800 sticky top-0 z-30 shadow-md">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
+            <div class="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
+                <!-- Brand & Concept -->
+                <div class="flex items-start sm:items-center gap-3">
+                    <div class="w-11 h-11 rounded-xl bg-gradient-to-br from-indigo-500 to-emerald-400 flex items-center justify-center shrink-0 shadow-lg">
+                        <i data-lucide="scissors" class="w-6 h-6 text-white"></i>
+                    </div>
+                    <div>
+                        <div class="flex flex-wrap items-center gap-2">
+                            <span class="px-2.5 py-0.5 text-xs font-semibold rounded-full bg-indigo-500/20 text-indigo-300 border border-indigo-500/30">
+                                모두의 창업 사업계획서 · 지원서_uxan
+                            </span>
+                            <span class="px-2.5 py-0.5 text-xs font-medium rounded-full bg-emerald-500/20 text-emerald-300 border border-emerald-500/30">
+                                2026.09.16 제출안 기반
+                            </span>
+                        </div>
+                        <h1 class="text-lg sm:text-xl font-bold tracking-tight mt-1 text-white">
+                            알바 병행 대학생을 위한 <span class="text-emerald-400">5~10분 순서형</span> 실습 영상편집 구독 강의
+                        </h1>
+                    </div>
+                </div>
+
+                <!-- Applicant Metadata Badges -->
+                <div class="flex flex-wrap items-center gap-2 text-xs text-slate-300 bg-slate-800/80 px-3.5 py-2 rounded-xl border border-slate-700/80">
+                    <div class="flex items-center gap-1.5 pr-2 border-r border-slate-700">
+                        <i data-lucide="user" class="w-3.5 h-3.5 text-indigo-400"></i>
+                        <span class="font-semibold text-white">정유진</span>
+                    </div>
+                    <div class="flex items-center gap-1 pr-2 border-r border-slate-700">
+                        <i data-lucide="map-pin" class="w-3.5 h-3.5 text-emerald-400"></i>
+                        <span>부산</span>
+                    </div>
+                    <div class="flex items-center gap-1 pr-2 border-r border-slate-700">
+                        <i data-lucide="graduation-cap" class="w-3.5 h-3.5 text-indigo-400"></i>
+                        <span>동명대학교 (멘토기관)</span>
+                    </div>
+                    <div class="flex items-center gap-1">
+                        <i data-lucide="briefcase" class="w-3.5 h-3.5 text-amber-400"></i>
+                        <span>교육 / 1인 기업</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Core Value Proposition Banner -->
+            <div class="mt-3 pt-3 border-t border-slate-800/90 flex flex-col sm:flex-row sm:items-center justify-between gap-2 text-xs sm:text-sm">
+                <div class="flex items-center gap-2 text-slate-300">
+                    <span class="inline-flex items-center gap-1 font-semibold text-amber-300">
+                        <i data-lucide="sparkles" class="w-4 h-4"></i> 핵심 가치:
+                    </span>
+                    <span>"커리큘럼 전체를 언제 끝낼지가 아니라, <strong class="text-white underline decoration-emerald-400 decoration-2 underline-offset-4">오늘 20분에 무엇을 끝낼지</strong> 기준의 이어보기 실습 설계"</span>
+                </div>
+                <div class="text-slate-400 text-xs shrink-0">
+                    타겟: 주 15~20h 알바 병행 대학 2~3학년 (SNS·마케팅 취업준비생)
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Container -->
+    <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 space-y-6">
+
+        <!-- 4 Core KPI Cards -->
+        <section class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+            <!-- KPI 1: Target Market Problem -->
+            <div class="bg-white rounded-2xl p-5 border border-slate-200/80 shadow-sm hover:shadow-md transition-shadow">
+                <div class="flex items-center justify-between mb-3">
+                    <span class="text-xs font-semibold uppercase tracking-wider text-slate-500">타겟 시장 문제 규모</span>
+                    <div class="w-9 h-9 rounded-xl bg-indigo-50 text-indigo-600 flex items-center justify-center">
+                        <i data-lucide="users" class="w-5 h-5"></i>
+                    </div>
+                </div>
+                <div class="flex items-baseline gap-2">
+                    <span class="text-2xl sm:text-3xl font-extrabold text-slate-900">67.2%</span>
+                    <span class="text-xs font-medium text-rose-600 bg-rose-50 px-2 py-0.5 rounded-full">학업 지장 54.8%</span>
+                </div>
+                <p class="text-xs text-slate-600 mt-2 leading-relaxed">
+                    대학생 알바 병행 비율 (알바몬 4,273명 조사)<br>
+                    <span class="text-slate-400">· 주 20h 이하 근무 68.5% / 3학년 72.5% (알바천국)</span>
+                </p>
+            </div>
+
+            <!-- KPI 2: 3-Month Beta Validation -->
+            <div class="bg-white rounded-2xl p-5 border border-slate-200/80 shadow-sm hover:shadow-md transition-shadow">
+                <div class="flex items-center justify-between mb-3">
+                    <span class="text-xs font-semibold uppercase tracking-wider text-slate-500">3개월 베타 검증 목표</span>
+                    <div class="w-9 h-9 rounded-xl bg-emerald-50 text-emerald-600 flex items-center justify-center">
+                        <i data-lucide="check-circle-2" class="w-5 h-5"></i>
+                    </div>
+                </div>
+                <div class="flex items-baseline gap-2">
+                    <span class="text-2xl sm:text-3xl font-extrabold text-emerald-600">50% 이상</span>
+                    <span class="text-xs font-medium text-slate-600 bg-slate-100 px-2 py-0.5 rounded-full">모집 20명 내외</span>
+                </div>
+                <p class="text-xs text-slate-600 mt-2 leading-relaxed">
+                    전체 8~10차시 중 <strong>80% 이상 수강 완주율</strong> 기준<br>
+                    <span class="text-slate-400">· 검증 기간: 2026년 10월 ~ 12월 시범 운영</span>
+                </p>
+            </div>
+
+            <!-- KPI 3: Year 1 Revenue Scenarios -->
+            <div class="bg-white rounded-2xl p-5 border border-slate-200/80 shadow-sm hover:shadow-md transition-shadow">
+                <div class="flex items-center justify-between mb-3">
+                    <span class="text-xs font-semibold uppercase tracking-wider text-slate-500">1년 차 목표 매출 (A / B)</span>
+                    <div class="w-9 h-9 rounded-xl bg-amber-50 text-amber-600 flex items-center justify-center">
+                        <i data-lucide="coins" class="w-5 h-5"></i>
+                    </div>
+                </div>
+                <div class="flex items-baseline gap-2">
+                    <span class="text-2xl sm:text-3xl font-extrabold text-slate-900">3,096<span class="text-base font-bold">만 원</span></span>
+                    <span class="text-xs font-medium text-indigo-600 bg-indigo-50 px-2 py-0.5 rounded-full">시나리오 A</span>
+                </div>
+                <p class="text-xs text-slate-600 mt-2 leading-relaxed">
+                    <strong>A:</strong> 월 12,900원 × 200명 × 12개월<br>
+                    <span class="text-slate-500"><strong>B(보수적):</strong> 월 9,900원 × 100명 = 1,188만 원</span>
+                </p>
+            </div>
+
+            <!-- KPI 4: Market Trend CAGR -->
+            <div class="bg-white rounded-2xl p-5 border border-slate-200/80 shadow-sm hover:shadow-md transition-shadow">
+                <div class="flex items-center justify-between mb-3">
+                    <span class="text-xs font-semibold uppercase tracking-wider text-slate-500">마이크로러닝 시장 성장률</span>
+                    <div class="w-9 h-9 rounded-xl bg-purple-50 text-purple-600 flex items-center justify-center">
+                        <i data-lucide="trending-up" class="w-5 h-5"></i>
+                    </div>
+                </div>
+                <div class="flex items-baseline gap-2">
+                    <span class="text-2xl sm:text-3xl font-extrabold text-indigo-600">15.73%</span>
+                    <span class="text-xs font-medium text-emerald-700 bg-emerald-50 px-2 py-0.5 rounded-full">글로벌 CAGR</span>
+                </div>
+                <p class="text-xs text-slate-600 mt-2 leading-relaxed">
+                    모바일 중심 Bite-sized Learning 고성장<br>
+                    <span class="text-slate-400">· 이러닝 불편 1위 '집중력 저하(28.1%)' 해소</span>
+                </p>
+            </div>
+        </section>
+
+        <!-- Interactive Navigation Tabs -->
+        <nav class="bg-white p-1.5 rounded-2xl border border-slate-200/90 shadow-sm flex flex-wrap gap-1.5" aria-label="대시보드 섹션 탭">
+            <button onclick="switchTab('market')" id="tab-btn-market" class="tab-btn tab-active flex-1 min-w-[150px] flex items-center justify-center gap-2 py-2.5 px-4 rounded-xl text-xs sm:text-sm font-semibold transition-all">
+                <i data-lucide="bar-chart-3" class="w-4 h-4"></i>
+                <span>1. 시장 문제 & 경쟁사 비교</span>
+            </button>
+            <button onclick="switchTab('revenue')" id="tab-btn-revenue" class="tab-btn text-slate-600 hover:bg-slate-100 flex-1 min-w-[150px] flex items-center justify-center gap-2 py-2.5 px-4 rounded-xl text-xs sm:text-sm font-semibold transition-all">
+                <i data-lucide="calculator" class="w-4 h-4"></i>
+                <span>2. 수익 모델 & 매출 시뮬레이터</span>
+            </button>
+            <button onclick="switchTab('roadmap')" id="tab-btn-roadmap" class="tab-btn text-slate-600 hover:bg-slate-100 flex-1 min-w-[150px] flex items-center justify-center gap-2 py-2.5 px-4 rounded-xl text-xs sm:text-sm font-semibold transition-all">
+                <i data-lucide="map" class="w-4 h-4"></i>
+                <span>3. 3단계 로드맵 & MVP 커리큘럼</span>
+            </button>
+            <button onclick="switchTab('mentoring')" id="tab-btn-mentoring" class="tab-btn text-slate-600 hover:bg-slate-100 flex-1 min-w-[150px] flex items-center justify-center gap-2 py-2.5 px-4 rounded-xl text-xs sm:text-sm font-semibold transition-all">
+                <i data-lucide="compass" class="w-4 h-4"></i>
+                <span>4. 동명대 책임멘토링 핵심과제</span>
+            </button>
+        </nav>
+
+        <!-- ===================================================================== -->
+        <!-- TAB 1: 시장 문제 & 경쟁사 포지셔닝                                      -->
+        <!-- ===================================================================== -->
+        <div id="tab-content-market" class="tab-panel space-y-6 fade-in">
+            <!-- Charts Row -->
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                <!-- Chart 1: 대학생 알바 병행 및 학년별 현황 -->
+                <div class="bg-white rounded-2xl p-6 border border-slate-200/80 shadow-sm">
+                    <div class="flex items-start justify-between mb-4">
+                        <div>
+                            <h2 class="text-base font-bold text-slate-900">타겟 고객군(대학생 알바 병행) 데이터 근거</h2>
+                            <p class="text-xs text-slate-500 mt-0.5">알바몬(4,273명) 및 알바천국 실태조사 기반 타겟 정합성</p>
+                        </div>
+                        <span class="text-xs font-medium px-2.5 py-1 rounded-lg bg-indigo-50 text-indigo-700">Q2 · Q3-2 근거</span>
+                    </div>
+                    <div class="h-64 w-full">
+                        <canvas id="studentWorkChart"></canvas>
+                    </div>
+                    <div class="mt-4 p-3 rounded-xl bg-slate-50 border border-slate-100 text-xs text-slate-600 flex items-start gap-2">
+                        <i data-lucide="info" class="w-4 h-4 text-indigo-500 shrink-0 mt-0.5"></i>
+                        <span><strong>인사이트:</strong> 2~3학년의 알바 병행률이 가장 높으며(68.7%~72.5%), 주 20시간 이하 단기·자투리 근무자가 68.5%에 달해 "짧고 끊긴 시간"에 맞춘 학습 설계가 필수적입니다.</span>
+                    </div>
+                </div>
+
+                <!-- Chart 2: 개인 이러닝 이용자 불편사항 (SW정책연구소) -->
+                <div class="bg-white rounded-2xl p-6 border border-slate-200/80 shadow-sm">
+                    <div class="flex items-start justify-between mb-4">
+                        <div>
+                            <h2 class="text-base font-bold text-slate-900">개인 이러닝 이용자 불편사항 분석</h2>
+                            <p class="text-xs text-slate-500 mt-0.5">SW정책연구소 「2023년 국내 이러닝산업 실태조사」 기반</p>
+                        </div>
+                        <span class="text-xs font-medium px-2.5 py-1 rounded-lg bg-emerald-50 text-emerald-700">1위 집중력 저하</span>
+                    </div>
+                    <div class="h-64 w-full">
+                        <canvas id="elearningPainChart"></canvas>
+                    </div>
+                    <div class="mt-4 p-3 rounded-xl bg-emerald-50/60 border border-emerald-100 text-xs text-slate-700 flex items-start gap-2">
+                        <i data-lucide="zap" class="w-4 h-4 text-emerald-600 shrink-0 mt-0.5"></i>
+                        <span><strong>해결 방향:</strong> 불편 1순위인 <strong>'학습 집중력 저하(28.1%)'</strong>는 긴 강의 호흡에서 비롯됩니다. 5~10분 마이크로 단위로 쪼개어 알바 후 20분 내 1개 실습을 완결하도록 설계했습니다.</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Competitor Matrix Table -->
+            <div class="bg-white rounded-2xl p-6 border border-slate-200/80 shadow-sm">
+                <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2 mb-5">
+                    <div>
+                        <h2 class="text-base font-bold text-slate-900">기존 서비스 대비 차별점 및 경쟁 포지셔닝 매트릭스</h2>
+                        <p class="text-xs text-slate-500 mt-0.5">기존 서비스의 한계(긴 단위·비순차적 구성·높은 비용) vs 자사 서비스의 해결책</p>
+                    </div>
+                    <span class="inline-flex items-center gap-1.5 text-xs font-semibold text-indigo-700 bg-indigo-50 px-3 py-1.5 rounded-xl">
+                        <i data-lucide="target" class="w-3.5 h-3.5"></i> Blue Ocean: 초단기 순차 실습 구독
+                    </span>
+                </div>
+
+                <div class="overflow-x-auto">
+                    <table class="w-full text-left border-collapse">
+                        <thead>
+                            <tr class="border-b border-slate-200 text-xs font-semibold text-slate-500 uppercase bg-slate-50/80">
+                                <th class="py-3.5 px-4 rounded-tl-xl">구분 / 서비스명</th>
+                                <th class="py-3.5 px-4">가격 구조</th>
+                                <th class="py-3.5 px-4">학습 단위 및 방식</th>
+                                <th class="py-3.5 px-4">알바 병행 대학생 관점의 한계</th>
+                                <th class="py-3.5 px-4 rounded-tr-xl text-center">자투리 시간 적합도</th>
+                            </tr>
+                        </thead>
+                        <tbody class="divide-y divide-slate-100 text-xs sm:text-sm">
+                            <!-- Our Service (Highlighted) -->
+                            <tr class="bg-indigo-50/70 border-l-4 border-l-indigo-600 font-medium">
+                                <td class="py-4 px-4">
+                                    <div class="flex items-center gap-2">
+                                        <span class="px-2 py-0.5 text-[11px] font-bold bg-indigo-600 text-white rounded-md">본 서비스</span>
+                                        <span class="font-bold text-indigo-950">uxan 실습형 구독 강의</span>
+                                    </div>
+                                </td>
+                                <td class="py-4 px-4 font-bold text-indigo-700">월 9,900 ~ 12,900원<br><span class="text-xs font-normal text-slate-500">(1~2강 무료 체험)</span></td>
+                                <td class="py-4 px-4 text-slate-800"><strong>5~10분 단위</strong> · 순서 고정<br><span class="text-xs text-indigo-700">어제 본 지점 자동 이어보기 + 실습</span></td>
+                                <td class="py-4 px-4 text-emerald-700 font-semibold">탐색 시간 0분, 알바 직후 20분 완결 가능</td>
+                                <td class="py-4 px-4 text-center">
+                                    <span class="inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-xs font-bold bg-emerald-500 text-white shadow-sm">
+                                        ★★★★★ 최적
+                                    </span>
+                                </td>
+                            </tr>
+                            <!-- YouTube -->
+                            <tr class="hover:bg-slate-50/80">
+                                <td class="py-3.5 px-4 font-semibold text-slate-800">유튜브 무료 강의</td>
+                                <td class="py-3.5 px-4 text-slate-600">무료 (광고 포함)</td>
+                                <td class="py-3.5 px-4 text-slate-600">30분~1시간 긴 호흡 · 비순차</td>
+                                <td class="py-3.5 px-4 text-rose-600">어디부터 볼지 몰라 매번 재검색 → 중도 포기</td>
+                                <td class="py-3.5 px-4 text-center text-slate-400">★★☆☆☆</td>
+                            </tr>
+                            <!-- Class101+ -->
+                            <tr class="hover:bg-slate-50/80">
+                                <td class="py-3.5 px-4 font-semibold text-slate-800">클래스101+ (종합구독)</td>
+                                <td class="py-3.5 px-4 text-slate-600">연 16.9~19.9만 원<br><span class="text-xs text-slate-400">(월 환산 ~16,600원)</span></td>
+                                <td class="py-3.5 px-4 text-slate-600">6,400개 클래스 · 강사별 12~30강</td>
+                                <td class="py-3.5 px-4 text-slate-600">방대한 분량에 압도되어 시작조차 못 함 / 휴강 시 지출 낭비</td>
+                                <td class="py-3.5 px-4 text-center text-slate-400">★★☆☆☆</td>
+                            </tr>
+                            <!-- Taling -->
+                            <tr class="hover:bg-slate-50/80">
+                                <td class="py-3.5 px-4 font-semibold text-slate-800">탈잉 (그룹 클래스)</td>
+                                <td class="py-3.5 px-4 text-slate-600">3시간 9만 원 (2인 이상)</td>
+                                <td class="py-3.5 px-4 text-slate-600">오프라인 / 실시간 화상 그룹</td>
+                                <td class="py-3.5 px-4 text-slate-600">예약과 이동 시간 필요 → 알바 후 즉각 접근 불가</td>
+                                <td class="py-3.5 px-4 text-center text-slate-400">★☆☆☆☆</td>
+                            </tr>
+                            <!-- Kmong -->
+                            <tr class="hover:bg-slate-50/80">
+                                <td class="py-3.5 px-4 font-semibold text-slate-800">크몽 (원데이 클래스)</td>
+                                <td class="py-3.5 px-4 text-slate-600">1회 180분 10만 원</td>
+                                <td class="py-3.5 px-4 text-slate-600">3시간 일괄 몰입형 레슨</td>
+                                <td class="py-3.5 px-4 text-slate-600">짧게 나눠 듣는 학습 불가, 대학생에게 고비용</td>
+                                <td class="py-3.5 px-4 text-center text-slate-400">★☆☆☆☆</td>
+                            </tr>
+                            <!-- Soomgo -->
+                            <tr class="hover:bg-slate-50/80">
+                                <td class="py-3.5 px-4 font-semibold text-slate-800">숨고 (1:1 개인레슨)</td>
+                                <td class="py-3.5 px-4 text-slate-600">시간당 평균 5만 원</td>
+                                <td class="py-3.5 px-4 text-slate-600">정기 예약형 1:1 맞춤</td>
+                                <td class="py-3.5 px-4 text-slate-600">가격 부담이 매우 높고 유동적인 알바 스케줄과 조율 난항</td>
+                                <td class="py-3.5 px-4 text-center text-slate-400">★☆☆☆☆</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <!-- ===================================================================== -->
+        <!-- TAB 2: 수익 모델 & 매출 시뮬레이터                                      -->
+        <!-- ===================================================================== -->
+        <div id="tab-content-revenue" class="tab-panel hidden space-y-6 fade-in">
+            <div class="grid grid-cols-1 lg:grid-cols-12 gap-6">
+                <!-- Interactive Simulator Controls & Output (7 cols) -->
+                <div class="lg:col-span-7 bg-white rounded-2xl p-6 border border-slate-200/80 shadow-sm flex flex-col justify-between">
+                    <div>
+                        <div class="flex flex-wrap items-center justify-between gap-2 mb-5">
+                            <div>
+                                <h2 class="text-base font-bold text-slate-900">구독 매출 실시간 시뮬레이터</h2>
+                                <p class="text-xs text-slate-500 mt-0.5">구독료와 유료 구독자 수를 조절하여 월간·연간 목표 매출을 검증하세요.</p>
+                            </div>
+                            <!-- Quick Scenario Preset Buttons -->
+                            <div class="flex items-center gap-1.5">
+                                <button onclick="applyPreset(9900, 100)" class="px-2.5 py-1.5 text-xs font-semibold rounded-lg bg-slate-100 hover:bg-slate-200 text-slate-700 transition">
+                                    시나리오 B (9,900원/100명)
+                                </button>
+                                <button onclick="applyPreset(12900, 200)" class="px-2.5 py-1.5 text-xs font-semibold rounded-lg bg-indigo-100 hover:bg-indigo-200 text-indigo-700 transition">
+                                    시나리오 A (12,900원/200명)
+                                </button>
+                            </div>
+                        </div>
+
+                        <!-- Sliders -->
+                        <div class="space-y-6 bg-slate-50 p-5 rounded-2xl border border-slate-200/60">
+                            <!-- Price Slider -->
+                            <div>
+                                <div class="flex justify-between items-center mb-2">
+                                    <label for="priceSlider" class="text-xs sm:text-sm font-semibold text-slate-700">월 구독료 설정 (KRW)</label>
+                                    <span id="priceDisplay" class="text-lg font-extrabold text-indigo-600">12,900원</span>
+                                </div>
+                                <input type="range" id="priceSlider" min="5900" max="19900" step="500" value="12900" class="w-full" oninput="updateRevenueSim()">
+                                <div class="flex justify-between text-[11px] text-slate-400 mt-1">
+                                    <span>5,900원 (초저가)</span>
+                                    <span class="text-emerald-600 font-medium">9,900원 (Q4-1 베타안)</span>
+                                    <span class="text-indigo-600 font-medium">12,900원 (Q3-2 목표가)</span>
+                                    <span>19,900원 (경쟁사)</span>
+                                </div>
+                            </div>
+
+                            <!-- Subscribers Slider -->
+                            <div>
+                                <div class="flex justify-between items-center mb-2">
+                                    <label for="subsSlider" class="text-xs sm:text-sm font-semibold text-slate-700">목표 유료 구독자 수 (명)</label>
+                                    <span id="subsDisplay" class="text-lg font-extrabold text-emerald-600">200명</span>
+                                </div>
+                                <input type="range" id="subsSlider" min="20" max="500" step="10" value="200" class="w-full" oninput="updateRevenueSim()">
+                                <div class="flex justify-between text-[11px] text-slate-400 mt-1">
+                                    <span>20명 (베타 파일럿)</span>
+                                    <span class="text-emerald-600 font-medium">100명 (1차 목표)</span>
+                                    <span class="text-indigo-600 font-medium">200명 (협약종료 목표)</span>
+                                    <span>500명 (확장기)</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Calculated Metrics Output -->
+                        <div class="grid grid-cols-1 sm:grid-cols-3 gap-3 mt-5">
+                            <div class="p-4 rounded-xl bg-slate-900 text-white">
+                                <span class="text-xs text-slate-400 block">예상 월간 반복 매출 (MRR)</span>
+                                <span id="mrrOutput" class="text-xl font-extrabold text-emerald-400 mt-1 block">2,580,000원</span>
+                            </div>
+                            <div class="p-4 rounded-xl bg-indigo-600 text-white">
+                                <span class="text-xs text-indigo-200 block">1년 차 예상 연 매출 (ARR)</span>
+                                <span id="arrOutput" class="text-xl font-extrabold text-white mt-1 block">3,096만 원</span>
+                            </div>
+                            <div class="p-4 rounded-xl bg-slate-50 border border-slate-200">
+                                <span class="text-xs text-slate-500 block">필요 무료체험 유입수 <span class="text-[10px]">(전환율 25% 가정)</span></span>
+                                <span id="funnelLeadOutput" class="text-xl font-extrabold text-slate-800 mt-1 block">800명</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Mini Bar Chart inside Simulator -->
+                    <div class="mt-6 pt-4 border-t border-slate-100">
+                        <div class="h-44 w-full">
+                            <canvas id="revenueScenarioChart"></canvas>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Freemium Funnel & Expansion Roadmap (5 cols) -->
+                <div class="lg:col-span-5 bg-white rounded-2xl p-6 border border-slate-200/80 shadow-sm flex flex-col justify-between">
+                    <div>
+                        <h2 class="text-base font-bold text-slate-900">Freemium 전환 퍼널 & 수익 확장 구조</h2>
+                        <p class="text-xs text-slate-500 mt-0.5">Q3-2 & Q4-1 기반 단계별 수익화 모델</p>
+
+                        <div class="mt-5 space-y-3">
+                            <!-- Step 1 -->
+                            <div class="relative p-4 rounded-xl bg-slate-50 border border-slate-200">
+                                <div class="flex items-center justify-between">
+                                    <span class="text-xs font-bold text-slate-500">STEP 01 · 유입 및 가치 검증 (무료 구간)</span>
+                                    <span class="px-2 py-0.5 text-[11px] font-bold bg-slate-200 text-slate-700 rounded-md">0원 (Free)</span>
+                                </div>
+                                <h3 class="text-sm font-bold text-slate-900 mt-1">1~2강 무료 체험 오픈</h3>
+                                <p class="text-xs text-slate-600 mt-1">5~10분 단위 호흡과 이어보기 UX를 직접 경험하게 하여 초기 진입장벽 제거</p>
+                            </div>
+
+                            <div class="flex justify-center -my-1">
+                                <i data-lucide="arrow-down" class="w-4 h-4 text-indigo-400"></i>
+                            </div>
+
+                            <!-- Step 2 -->
+                            <div class="relative p-4 rounded-xl bg-indigo-50/80 border border-indigo-200">
+                                <div class="flex items-center justify-between">
+                                    <span class="text-xs font-bold text-indigo-600">STEP 02 · 핵심 수익원 (B2C 정기구독)</span>
+                                    <span class="px-2 py-0.5 text-[11px] font-bold bg-indigo-600 text-white rounded-md">월 9,900~12,900원</span>
+                                </div>
+                                <h3 class="text-sm font-bold text-indigo-950 mt-1">3강 이후 전체 커리큘럼 유료 전환</h3>
+                                <p class="text-xs text-slate-700 mt-1">컷편집·자막 순서형 실습 강의 전체 접근권 + 알바 소득 내 부담 없는 구독 모델</p>
+                            </div>
+
+                            <div class="flex justify-center -my-1">
+                                <i data-lucide="arrow-down" class="w-4 h-4 text-emerald-500"></i>
+                            </div>
+
+                            <!-- Step 3 -->
+                            <div class="relative p-4 rounded-xl bg-emerald-50/70 border border-emerald-200">
+                                <div class="flex items-center justify-between">
+                                    <span class="text-xs font-bold text-emerald-700">STEP 03 · 객단가 상승 (부가 유료 옵션)</span>
+                                    <span class="px-2 py-0.5 text-[11px] font-bold bg-emerald-600 text-white rounded-md">Upsell</span>
+                                </div>
+                                <h3 class="text-sm font-bold text-emerald-950 mt-1">완주자 대상 1:1 포트폴리오 첨삭 피드백</h3>
+                                <p class="text-xs text-slate-700 mt-1">SNS·마케팅 직무 취업 제출용 편집 결과물 전문가 리뷰 옵션 제공</p>
+                            </div>
+
+                            <div class="flex justify-center -my-1">
+                                <i data-lucide="arrow-down" class="w-4 h-4 text-amber-500"></i>
+                            </div>
+
+                            <!-- Step 4 -->
+                            <div class="relative p-4 rounded-xl bg-amber-50/70 border border-amber-200">
+                                <div class="flex items-center justify-between">
+                                    <span class="text-xs font-bold text-amber-700">STEP 04 · 중장기 스케일업 (B2B 제휴)</span>
+                                    <span class="px-2 py-0.5 text-[11px] font-bold bg-amber-500 text-white rounded-md">B2B / 대학제휴</span>
+                                </div>
+                                <h3 class="text-sm font-bold text-amber-950 mt-1">대학 취업센터·비교과 프로그램 단체 구독</h3>
+                                <p class="text-xs text-slate-700 mt-1">부산·서울 주요 대학 일자리센터 연계 및 색보정·모션그래픽 후속 확장</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- ===================================================================== -->
+        <!-- TAB 3: 3단계 실행 로드맵 & MVP 커리큘럼                                 -->
+        <!-- ===================================================================== -->
+        <div id="tab-content-roadmap" class="tab-panel hidden space-y-6 fade-in">
+            <!-- 3-Stage Execution Roadmap -->
+            <div class="bg-white rounded-2xl p-6 border border-slate-200/80 shadow-sm">
+                <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2 mb-6">
+                    <div>
+                        <h2 class="text-base font-bold text-slate-900">2026년 4분기 3단계 사업화 실행 로드맵</h2>
+                        <p class="text-xs text-slate-500 mt-0.5">Q4-1 계획 기반: 콘텐츠 제작 → 베타 완주율(50%↑) 검증 → 유료 구독 전환</p>
+                    </div>
+                    <span class="text-xs font-semibold px-3 py-1.5 rounded-xl bg-emerald-50 text-emerald-700 border border-emerald-200">
+                        핵심 KPI: 완주율(80% 이상 수강) ≥ 50%
+                    </span>
+                </div>
+
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-5">
+                    <!-- Phase 1 -->
+                    <div class="rounded-2xl p-5 bg-slate-50 border border-slate-200/90 relative overflow-hidden">
+                        <div class="flex items-center justify-between mb-3">
+                            <span class="px-2.5 py-1 text-xs font-bold rounded-lg bg-indigo-600 text-white">1단계 · 2026년 10월</span>
+                            <i data-lucide="video" class="w-5 h-5 text-indigo-500"></i>
+                        </div>
+                        <h3 class="text-base font-bold text-slate-900">커리큘럼 설계 및 MVP 영상 제작</h3>
+                        <ul class="mt-3 space-y-2 text-xs text-slate-600">
+                            <li class="flex items-start gap-2">
+                                <i data-lucide="check" class="w-4 h-4 text-indigo-600 shrink-0 mt-0.5"></i>
+                                <span>컷편집·자막 기초 <strong>5~10분 단위 영상 8~10편</strong> 제작</span>
+                            </li>
+                            <li class="flex items-start gap-2">
+                                <i data-lucide="check" class="w-4 h-4 text-indigo-600 shrink-0 mt-0.5"></i>
+                                <span>알바 종료 후 20분 내 이어볼 수 있는 순서형 시퀀스 설계</span>
+                            </li>
+                            <li class="flex items-start gap-2">
+                                <i data-lucide="check" class="w-4 h-4 text-indigo-600 shrink-0 mt-0.5"></i>
+                                <span>이론 배제, 시청 직후 손으로 따라 하는 실습 소스 제공</span>
+                            </li>
+                        </ul>
+                    </div>
+
+                    <!-- Phase 2 -->
+                    <div class="rounded-2xl p-5 bg-emerald-50/50 border-2 border-emerald-400/70 relative overflow-hidden">
+                        <div class="flex items-center justify-between mb-3">
+                            <span class="px-2.5 py-1 text-xs font-bold rounded-lg bg-emerald-600 text-white">2단계 · 2026년 11월 (핵심검증)</span>
+                            <i data-lucide="flask-conical" class="w-5 h-5 text-emerald-600"></i>
+                        </div>
+                        <h3 class="text-base font-bold text-slate-900">소규모 베타 운영 및 완주율 검증</h3>
+                        <ul class="mt-3 space-y-2 text-xs text-slate-700">
+                            <li class="flex items-start gap-2">
+                                <i data-lucide="check" class="w-4 h-4 text-emerald-600 shrink-0 mt-0.5"></i>
+                                <span>알바 병행 대학생 <strong>20명 내외</strong> 베타 그룹 무료 모집</span>
+                            </li>
+                            <li class="flex items-start gap-2">
+                                <i data-lucide="check" class="w-4 h-4 text-emerald-600 shrink-0 mt-0.5"></i>
+                                <span><strong>성공 기준:</strong> 전체 차시 80% 이상 수강 <strong>완주율 50%↑</strong></span>
+                            </li>
+                            <li class="flex items-start gap-2">
+                                <i data-lucide="check" class="w-4 h-4 text-emerald-600 shrink-0 mt-0.5"></i>
+                                <span>유튜브 평균 이탈 지점(중반부) 돌파 여부 및 실습물 검증</span>
+                            </li>
+                        </ul>
+                    </div>
+
+                    <!-- Phase 3 -->
+                    <div class="rounded-2xl p-5 bg-slate-50 border border-slate-200/90 relative overflow-hidden">
+                        <div class="flex items-center justify-between mb-3">
+                            <span class="px-2.5 py-1 text-xs font-bold rounded-lg bg-slate-800 text-white">3단계 · 2026년 12월~</span>
+                            <i data-lucide="rocket" class="w-5 h-5 text-slate-700"></i>
+                        </div>
+                        <h3 class="text-base font-bold text-slate-900">피드백 반영 및 유료 구독 전환</h3>
+                        <ul class="mt-3 space-y-2 text-xs text-slate-600">
+                            <li class="flex items-start gap-2">
+                                <i data-lucide="check" class="w-4 h-4 text-slate-700 shrink-0 mt-0.5"></i>
+                                <span>베타 이탈 구간 및 난이도 피드백 반영 커리큘럼 고도화</span>
+                            </li>
+                            <li class="flex items-start gap-2">
+                                <i data-lucide="check" class="w-4 h-4 text-slate-700 shrink-0 mt-0.5"></i>
+                                <span>초기 가입자 대상 저가 요금제(9,900원~) 실제 결제 의사 확인</span>
+                            </li>
+                            <li class="flex items-start gap-2">
+                                <i data-lucide="check" class="w-4 h-4 text-slate-700 shrink-0 mt-0.5"></i>
+                                <span>목표 달성 시 색보정·모션그래픽 후속 차시 확장 착수</span>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Interactive MVP Curriculum Preview & Completion Simulator -->
+            <div class="bg-white rounded-2xl p-6 border border-slate-200/80 shadow-sm">
+                <div class="flex flex-col md:flex-row md:items-center justify-between gap-4 pb-5 border-b border-slate-100">
+                    <div>
+                        <div class="flex items-center gap-2">
+                            <h2 class="text-base font-bold text-slate-900">MVP 8차시 컷편집·자막 실습 커리큘럼 체험 (이어보기 시뮬레이터)</h2>
+                            <span class="px-2 py-0.5 text-[11px] font-bold bg-indigo-100 text-indigo-700 rounded-md">총 64분 분량</span>
+                        </div>
+                        <p class="text-xs text-slate-500 mt-1">알바 끝난 뒤 하루 20분(2~3강)씩 체크하며 베타 검증 기준(80% 이상 완주) 달성 여부를 테스트해보세요.</p>
+                    </div>
+
+                    <!-- Live Progress Bar Box -->
+                    <div class="bg-slate-900 text-white px-4 py-3 rounded-xl min-w-[260px]">
+                        <div class="flex items-center justify-between text-xs mb-1.5">
+                            <span class="text-slate-300">현재 나의 수강 완주율</span>
+                            <span id="currProgressText" class="font-extrabold text-emerald-400">37.5% (3/8강)</span>
+                        </div>
+                        <div class="w-full bg-slate-700 rounded-full h-2.5 overflow-hidden">
+                            <div id="currProgressBar" class="bg-gradient-to-r from-indigo-500 to-emerald-400 h-2.5 rounded-full transition-all duration-300" style="width: 37.5%"></div>
+                        </div>
+                        <div id="currStatusBadge" class="text-[11px] text-amber-300 mt-1.5 flex items-center gap-1">
+                            <i data-lucide="play-circle" class="w-3.5 h-3.5"></i>
+                            <span>다음 이어보기: 4강 리듬감 살리는 J컷·L컷</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 8 Lessons Checklist Grid -->
+                <div id="curriculumList" class="grid grid-cols-1 md:grid-cols-2 gap-3 mt-5">
+                    <!-- Rendered dynamically via JS -->
+                </div>
+            </div>
+        </div>
+
+        <!-- ===================================================================== -->
+        <!-- TAB 4: 동명대학교 책임멘토링 핵심 과제 (Q4-2)                          -->
+        <!-- ===================================================================== -->
+        <div id="tab-content-mentoring" class="tab-panel hidden space-y-6 fade-in">
+            <div class="bg-gradient-to-r from-slate-900 to-indigo-950 text-white rounded-2xl p-6 shadow-sm flex flex-col md:flex-row md:items-center justify-between gap-4">
+                <div>
+                    <div class="flex items-center gap-2 text-xs text-emerald-400 font-semibold mb-1">
+                        <i data-lucide="award" class="w-4 h-4"></i>
+                        <span>멘토 기관: 동명대학교 · Q4-2 책임멘토 요청사항</span>
+                    </div>
+                    <h2 class="text-lg sm:text-xl font-bold">초기 검증 리스크 해소를 위한 4대 핵심 의사결정 트래커</h2>
+                    <p class="text-xs sm:text-sm text-slate-300 mt-1">멘토링 진행에 따라 각 과제의 방향성을 선택하고 의사결정 상태를 관리할 수 있습니다.</p>
+                </div>
+                <div class="bg-white/10 backdrop-blur-sm border border-white/15 rounded-xl px-4 py-3 text-center shrink-0">
+                    <span class="text-xs text-slate-300 block">의사결정 완료 현황</span>
+                    <span id="mentorResolvedCount" class="text-2xl font-extrabold text-emerald-400">1 / 4</span>
+                </div>
+            </div>
+
+            <!-- 4 Mentoring Cards -->
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-5" id="mentoringGrid">
+                <!-- Card 1 -->
+                <div class="bg-white rounded-2xl p-6 border border-slate-200/90 shadow-sm flex flex-col justify-between">
+                    <div>
+                        <div class="flex items-center justify-between gap-2 mb-3">
+                            <span class="px-2.5 py-1 text-xs font-bold bg-indigo-50 text-indigo-700 rounded-lg">과제 01 · 커리큘럼 시퀀싱</span>
+                            <button onclick="toggleMentorStatus(0)" id="m-status-0" class="px-2.5 py-1 text-xs font-semibold rounded-full bg-amber-100 text-amber-800 hover:opacity-80 transition">
+                                멘토링 논의중
+                            </button>
+                        </div>
+                        <h3 class="text-base font-bold text-slate-900">5~10분 강의 분할 및 순서 설계 기준 확립</h3>
+                        <p class="text-xs text-slate-600 mt-2 leading-relaxed">
+                            알바 병행 학생이 중도 이탈 없이 완주하도록 만드는 교육학적 시퀀싱 기준이 부재합니다. 어떤 방식이 완주율을 높일지 검토가 필요합니다.
+                        </p>
+                        <div class="mt-4 p-3.5 rounded-xl bg-slate-50 border border-slate-200/80 space-y-2">
+                            <span class="text-[11px] font-bold text-slate-500 uppercase">검토 선택지 (클릭하여 가설 선택)</span>
+                            <div class="flex flex-col sm:flex-row gap-2">
+                                <button onclick="selectOption(0, 'A')" id="opt-0-A" class="flex-1 text-left p-2.5 rounded-lg border border-indigo-500 bg-indigo-50 text-xs font-semibold text-indigo-900">
+                                    옵션 A: 기능별 분할 (컷편집→자막→효과 순차)
+                                </button>
+                                <button onclick="selectOption(0, 'B')" id="opt-0-B" class="flex-1 text-left p-2.5 rounded-lg border border-slate-200 bg-white text-xs font-medium text-slate-600 hover:bg-slate-50">
+                                    옵션 B: 완성 결과물별 (릴스 1편→브이로그 1편)
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Card 2 -->
+                <div class="bg-white rounded-2xl p-6 border border-slate-200/90 shadow-sm flex flex-col justify-between">
+                    <div>
+                        <div class="flex items-center justify-between gap-2 mb-3">
+                            <span class="px-2.5 py-1 text-xs font-bold bg-indigo-50 text-indigo-700 rounded-lg">과제 02 · 유료 전환 경계선</span>
+                            <button onclick="toggleMentorStatus(1)" id="m-status-1" class="px-2.5 py-1 text-xs font-semibold rounded-full bg-amber-100 text-amber-800 hover:opacity-80 transition">
+                                멘토링 논의중
+                            </button>
+                        </div>
+                        <h3 class="text-base font-bold text-slate-900">무료 유튜브 대비 구독료 지불 정당화 최소 기준</h3>
+                        <p class="text-xs text-slate-600 mt-2 leading-relaxed">
+                            단순 '짧은 호흡·순서 정렬' 외에 월 9,900~12,900원 결제를 설득할 최소한의 실습 피드백·커뮤니티 범위를 설정해야 합니다.
+                        </p>
+                        <div class="mt-4 p-3.5 rounded-xl bg-slate-50 border border-slate-200/80 space-y-2">
+                            <span class="text-[11px] font-bold text-slate-500 uppercase">유료화 핵심 트리거 후보</span>
+                            <div class="flex flex-col sm:flex-row gap-2">
+                                <button onclick="selectOption(1, 'A')" id="opt-1-A" class="flex-1 text-left p-2.5 rounded-lg border border-indigo-500 bg-indigo-50 text-xs font-semibold text-indigo-900">
+                                    옵션 A: 실습 원본 소스팩 + 과제 체크리스트 피드백
+                                </button>
+                                <button onclick="selectOption(1, 'B')" id="opt-1-B" class="flex-1 text-left p-2.5 rounded-lg border border-slate-200 bg-white text-xs font-medium text-slate-600 hover:bg-slate-50">
+                                    옵션 B: 주간 스터디 인증방 + Q&A 질문권
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Card 3 -->
+                <div class="bg-white rounded-2xl p-6 border border-slate-200/90 shadow-sm flex flex-col justify-between">
+                    <div>
+                        <div class="flex items-center justify-between gap-2 mb-3">
+                            <span class="px-2.5 py-1 text-xs font-bold bg-indigo-50 text-indigo-700 rounded-lg">과제 03 · 초기 고객 확보 채널</span>
+                            <button onclick="toggleMentorStatus(2)" id="m-status-2" class="px-2.5 py-1 text-xs font-semibold rounded-full bg-emerald-100 text-emerald-800 hover:opacity-80 transition">
+                                우선순위 가설수립
+                            </button>
+                        </div>
+                        <h3 class="text-base font-bold text-slate-900">파일럿 20~30명 확보를 위한 저예산 채널 우선순위</h3>
+                        <p class="text-xs text-slate-600 mt-2 leading-relaxed">
+                            타겟(알바 병행 대학 2~3학년)에게 적은 예산으로 가장 빠르게 반응을 확인할 1순위 유입 경로 실행 순서를 확정합니다.
+                        </p>
+                        <div class="mt-4 p-3.5 rounded-xl bg-slate-50 border border-slate-200/80 space-y-2">
+                            <span class="text-[11px] font-bold text-slate-500 uppercase">1순위 집중 테스트 채널 선택</span>
+                            <div class="flex flex-wrap gap-2">
+                                <button onclick="selectOption(2, 'A')" id="opt-2-A" class="flex-1 text-left p-2.5 rounded-lg border border-indigo-500 bg-indigo-50 text-xs font-semibold text-indigo-900">
+                                    1순위: 대학 커뮤니티 (에브리타임 타겟 홍보)
+                                </button>
+                                <button onclick="selectOption(2, 'B')" id="opt-2-B" class="flex-1 text-left p-2.5 rounded-lg border border-slate-200 bg-white text-xs font-medium text-slate-600 hover:bg-slate-50">
+                                    대안: 알바 플랫폼 제휴 / 인스타 릴스 광고
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Card 4 -->
+                <div class="bg-white rounded-2xl p-6 border border-slate-200/90 shadow-sm flex flex-col justify-between">
+                    <div>
+                        <div class="flex items-center justify-between gap-2 mb-3">
+                            <span class="px-2.5 py-1 text-xs font-bold bg-indigo-50 text-indigo-700 rounded-lg">과제 04 · 리텐션 & 완주 장치</span>
+                            <button onclick="toggleMentorStatus(3)" id="m-status-3" class="px-2.5 py-1 text-xs font-semibold rounded-full bg-amber-100 text-amber-800 hover:opacity-80 transition">
+                                멘토링 논의중
+                            </button>
+                        </div>
+                        <h3 class="text-base font-bold text-slate-900">짧은 시간 내 진도 확인이 가능한 완주 유도 장치</h3>
+                        <p class="text-xs text-slate-600 mt-2 leading-relaxed">
+                            알바 퇴근 시간대에 맞춰 학습을 환기하고, 직관적으로 진도율을 체감하게 하는 마이크로러닝 리텐션 레퍼런스를 확보합니다.
+                        </p>
+                        <div class="mt-4 p-3.5 rounded-xl bg-slate-50 border border-slate-200/80 space-y-2">
+                            <span class="text-[11px] font-bold text-slate-500 uppercase">MVP 완주 유도 기능 선택</span>
+                            <div class="flex flex-col sm:flex-row gap-2">
+                                <button onclick="selectOption(3, 'A')" id="opt-3-A" class="flex-1 text-left p-2.5 rounded-lg border border-indigo-500 bg-indigo-50 text-xs font-semibold text-indigo-900">
+                                    옵션 A: 알바 퇴근시간 맞춤 카카오톡 리마인드 알림
+                                </button>
+                                <button onclick="selectOption(3, 'B')" id="opt-3-B" class="flex-1 text-left p-2.5 rounded-lg border border-slate-200 bg-white text-xs font-medium text-slate-600 hover:bg-slate-50">
+                                    옵션 B: 노션 기반 10분 실습 스탬프 체크리스트
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Footer -->
+        <footer class="pt-4 pb-8 border-t border-slate-200/80 flex flex-col sm:flex-row items-center justify-between gap-2 text-xs text-slate-400">
+            <div>
+                © 2026 모두의 창업 과제제출 사업기획 대시보드 · <strong>지원자 정유진 (지원서_uxan)</strong>
+            </div>
+            <div>
+                지원지역: 부산 · 사업분야: 교육 · 멘토기관: 동명대학교
+            </div>
+        </footer>
+    </main>
+
+    <!-- Application Logic -->
+    <script>
+        // Initialize Lucide Icons
+        lucide.createIcons();
+
+        // ---------------------------------------------------------
+        // 1. Tab Switching Logic
+        // ---------------------------------------------------------
+        function switchTab(tabId) {
+            // Hide all panels
+            document.querySelectorAll('.tab-panel').forEach(panel => {
+                panel.classList.add('hidden');
+            });
+            // Reset all tab buttons
+            document.querySelectorAll('.tab-btn').forEach(btn => {
+                btn.classList.remove('tab-active');
+                btn.classList.add('text-slate-600', 'hover:bg-slate-100');
+            });
+
+            // Show selected panel
+            document.getElementById(`tab-content-${tabId}`).classList.remove('hidden');
+            const activeBtn = document.getElementById(`tab-btn-${tabId}`);
+            activeBtn.classList.add('tab-active');
+            activeBtn.classList.remove('text-slate-600', 'hover:bg-slate-100');
+        }
+
+        // ---------------------------------------------------------
+        // 2. Chart.js Visualizations (Tab 1 & Tab 2)
+        // ---------------------------------------------------------
+        let revenueChartInstance = null;
+
+        function initCharts() {
+            // Chart 1: 대학생 알바 병행 및 학년별 현황
+            const ctx1 = document.getElementById('studentWorkChart').getContext('2d');
+            new Chart(ctx1, {
+                type: 'bar',
+                data: {
+                    labels: [
+                        '전체 알바 병행률',
+                        '학업 지장 응답(병행자 중)',
+                        '주 20시간 이하 근무 계획',
+                        '2학년 알바 병행률',
+                        '3학년 알바 병행률'
+                    ],
+                    datasets: [{
+                        label: '비율 (%)',
+                        data: [67.2, 54.8, 68.5, 68.7, 72.5],
+                        backgroundColor: [
+                            '#4f46e5',
+                            '#f43f5e',
+                            '#10b981',
+                            '#6366f1',
+                            '#312e81'
+                        ],
+                        borderRadius: 8,
+                        barThickness: 28
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: { display: false },
+                        tooltip: {
+                            callbacks: {
+                                label: (ctx) => ` ${ctx.raw}%`
+                            }
+                        }
+                    },
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            max: 100,
+                            grid: { color: '#f1f5f9' },
+                            ticks: { font: { size: 11 }, callback: v => v + '%' }
+                        },
+                        x: {
+                            grid: { display: false },
+                            ticks: { font: { size: 11 } }
+                        }
+                    }
+                }
+            });
+
+            // Chart 2: 개인 이러닝 이용자 불편사항 (SW정책연구소)
+            const ctx2 = document.getElementById('elearningPainChart').getContext('2d');
+            new Chart(ctx2, {
+                type: 'doughnut',
+                data: {
+                    labels: [
+                        '1위: 학습 집중력 저하 (28.1%)',
+                        '기타 불편사항 (콘텐츠 탐색·비용·시간 등 71.9%)'
+                    ],
+                    datasets: [{
+                        data: [28.1, 71.9],
+                        backgroundColor: ['#10b981', '#e2e8f0'],
+                        borderWidth: 0,
+                        hoverOffset: 4
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    cutout: '68%',
+                    plugins: {
+                        legend: {
+                            position: 'bottom',
+                            labels: { font: { size: 12 }, padding: 16 }
+                        },
+                        tooltip: {
+                            callbacks: {
+                                label: (ctx) => ` ${ctx.label}`
+                            }
+                        }
+                    }
+                }
+            });
+
+            // Chart 3: Revenue Simulator Comparison Bar Chart
+            const ctx3 = document.getElementById('revenueScenarioChart').getContext('2d');
+            revenueChartInstance = new Chart(ctx3, {
+                type: 'bar',
+                data: {
+                    labels: [
+                        '시나리오 B (보수적 베타안)',
+                        '현재 시뮬레이션 설정값',
+                        '시나리오 A (1년 차 목표)'
+                    ],
+                    datasets: [{
+                        label: '연간 매출 (만 원)',
+                        data: [1188, 3096, 3096],
+                        backgroundColor: ['#94a3b8', '#10b981', '#4f46e5'],
+                        borderRadius: 8,
+                        barThickness: 36
+                    }]
+                },
+                options: {
+                    indexAxis: 'y',
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: { display: false },
+                        tooltip: {
+                            callbacks: {
+                                label: (ctx) => ` 연 매출: ${ctx.raw.toLocaleString()}만 원`
+                            }
+                        }
+                    },
+                    scales: {
+                        x: {
+                            beginAtZero: true,
+                            grid: { color: '#f1f5f9' },
+                            ticks: { font: { size: 11 }, callback: v => v.toLocaleString() + '만' }
+                        },
+                        y: {
+                            grid: { display: false },
+                            ticks: { font: { size: 11, weight: 'bold' } }
+                        }
+                    }
+                }
+            });
+        }
+
+        // ---------------------------------------------------------
+        // 3. Interactive Revenue Simulator Logic
+        // ---------------------------------------------------------
+        function updateRevenueSim() {
+            const price = parseInt(document.getElementById('priceSlider').value, 10);
+            const subs = parseInt(document.getElementById('subsSlider').value, 10);
+
+            const mrr = price * subs;
+            const arr = mrr * 12;
+            const arrInManWon = Math.round(arr / 10000);
+            const leadsNeeded = Math.round(subs / 0.25); // 25% free-to-paid conversion assumption
+
+            document.getElementById('priceDisplay').textContent = `${price.toLocaleString()}원`;
+            document.getElementById('subsDisplay').textContent = `${subs.toLocaleString()}명`;
+            document.getElementById('mrrOutput').textContent = `${mrr.toLocaleString()}원`;
+            document.getElementById('arrOutput').textContent = `${arrInManWon.toLocaleString()}만 원`;
+            document.getElementById('funnelLeadOutput').textContent = `${leadsNeeded.toLocaleString()}명`;
+
+            if (revenueChartInstance) {
+                revenueChartInstance.data.datasets[0].data[1] = arrInManWon;
+                revenueChartInstance.update();
+            }
+        }
+
+        function applyPreset(price, subs) {
+            document.getElementById('priceSlider').value = price;
+            document.getElementById('subsSlider').value = subs;
+            updateRevenueSim();
+        }
+
+        // ---------------------------------------------------------
+        // 4. MVP 8-Lesson Curriculum Interactive Checklist
+        // ---------------------------------------------------------
+        const mvpLessons = [
+            { id: 1, title: '1강. 작업 환경 세팅 & 단축키 5개만 익히기', duration: '6분', tag: '무료체험', completed: true, task: '실습: 원본 클립 불러오기 및 컷 분할 세팅' },
+            { id: 2, title: '2강. 호흡 늘어지는 구간 0.5초 단위로 잘라내기', duration: '8분', tag: '무료체험', completed: true, task: '실습: 인터뷰 영상 무음 구간 컷편집 완성' },
+            { id: 3, title: '3강. 알바 브이로그 컷 전환 & 줌인/줌아웃 템포', duration: '9분', tag: '유료구독', completed: true, task: '실습: 30초 숏폼 컷 리듬 맞추기' },
+            { id: 4, title: '4강. 자연스러운 대화를 만드는 J컷·L컷 오디오 연결', duration: '8분', tag: '유료구독', completed: false, task: '실습: 장면 전환 전 오디오 선행 배치' },
+            { id: 5, title: '5강. 가독성 200% 올리는 기본 자막 바 & 폰트 위계', duration: '7분', tag: '유료구독', completed: false, task: '실습: 말자막 프리셋 1종 저장하기' },
+            { id: 6, title: '6강. 예능형 포인트 자막 & 강조 애니메이션 3초 적용', duration: '9분', tag: '유료구독', completed: false, task: '실습: 핵심 키워드 팝업 자막 삽입' },
+            { id: 7, title: '7강. 저작권 걱정 없는 BGM 밸런싱 & 효과음 타이밍', duration: '8분', tag: '유료구독', completed: false, task: '실습: 목소리 대비 배경음 -18dB 맞추기' },
+            { id: 8, title: '8강. 최종 렌더링 & 포트폴리오용 릴스 1편 추출', duration: '9분', tag: '완주미션', completed: false, task: '결과물: SNS 업로드용 1080p MP4 완성' }
+        ];
+
+        function renderCurriculum() {
+            const container = document.getElementById('curriculumList');
+            container.innerHTML = '';
+
+            mvpLessons.forEach((lesson, idx) => {
+                const isDone = lesson.completed;
+                const badgeColor = lesson.tag === '무료체험'
+                    ? 'bg-emerald-100 text-emerald-700'
+                    : (lesson.tag === '완주미션' ? 'bg-amber-100 text-amber-800' : 'bg-indigo-100 text-indigo-700');
+
+                const card = document.createElement('div');
+                card.onclick = () => toggleLesson(idx);
+                card.className = `cursor-pointer p-4 rounded-xl border transition-all flex items-start gap-3 ${
+                    isDone
+                        ? 'bg-indigo-50/40 border-indigo-200'
+                        : 'bg-white border-slate-200 hover:border-indigo-300'
+                }`;
+
+                card.innerHTML = `
+                    <div class="mt-0.5 w-5 h-5 rounded-md flex items-center justify-center shrink-0 border ${
+                        isDone ? 'bg-indigo-600 border-indigo-600 text-white' : 'border-slate-300 bg-white'
+                    }">
+                        ${isDone ? '<svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" stroke-width="3" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"></path></svg>' : ''}
+                    </div>
+                    <div class="flex-1 min-w-0">
+                        <div class="flex flex-wrap items-center justify-between gap-1.5">
+                            <span class="text-xs sm:text-sm font-bold ${isDone ? 'text-slate-500 line-through' : 'text-slate-900'}">${lesson.title}</span>
+                            <div class="flex items-center gap-1.5 shrink-0">
+                                <span class="px-2 py-0.5 text-[10px] font-bold rounded ${badgeColor}">${lesson.tag}</span>
+                                <span class="text-xs font-semibold text-slate-500 bg-slate-100 px-2 py-0.5 rounded">${lesson.duration}</span>
+                            </div>
+                        </div>
+                        <p class="text-xs text-slate-500 mt-1">${lesson.task}</p>
+                    </div>
+                `;
+                container.appendChild(card);
+            });
+
+            updateCurriculumProgress();
+        }
+
+        function toggleLesson(index) {
+            mvpLessons[index].completed = !mvpLessons[index].completed;
+            renderCurriculum();
+        }
+
+        function updateCurriculumProgress() {
+            const total = mvpLessons.length;
+            const doneCount = mvpLessons.filter(l => l.completed).length;
+            const percent = ((doneCount / total) * 100).toFixed(1);
+            const nextLesson = mvpLessons.find(l => !l.completed);
+
+            document.getElementById('currProgressText').textContent = `${percent}% (${doneCount}/${total}강)`;
+            document.getElementById('currProgressBar').style.width = `${percent}%`;
+
+            const badgeEl = document.getElementById('currStatusBadge');
+            if (percent >= 80 && doneCount < total) {
+                badgeEl.className = 'text-[11px] text-emerald-300 mt-1.5 flex items-center gap-1 font-semibold';
+                badgeEl.innerHTML = `<span>🎉 베타 검증 기준(80% 이상 완주) 달성! 다음: ${nextLesson.title}</span>`;
+            } else if (doneCount === total) {
+                badgeEl.className = 'text-[11px] text-emerald-300 mt-1.5 flex items-center gap-1 font-bold';
+                badgeEl.innerHTML = `<span>🏆 전 과정(100%) 완주 완료! 포트폴리오 첨삭 대상</span>`;
+            } else {
+                badgeEl.className = 'text-[11px] text-amber-300 mt-1.5 flex items-center gap-1';
+                badgeEl.innerHTML = `<span>▶ 다음 이어보기: ${nextLesson ? nextLesson.title : ''}</span>`;
+            }
+        }
+
+        // ---------------------------------------------------------
+        // 5. Mentoring Tracker Logic (Tab 4)
+        // ---------------------------------------------------------
+        const mentorStates = [false, false, true, false]; // index 2 starts as resolved hypothesis
+
+        function toggleMentorStatus(idx) {
+            mentorStates[idx] = !mentorStates[idx];
+            const btn = document.getElementById(`m-status-${idx}`);
+            if (mentorStates[idx]) {
+                btn.textContent = '방향성 확정완료';
+                btn.className = 'px-2.5 py-1 text-xs font-semibold rounded-full bg-emerald-100 text-emerald-800 hover:opacity-80 transition';
+            } else {
+                btn.textContent = '멘토링 논의중';
+                btn.className = 'px-2.5 py-1 text-xs font-semibold rounded-full bg-amber-100 text-amber-800 hover:opacity-80 transition';
+            }
+            const resolved = mentorStates.filter(Boolean).length;
+            document.getElementById('mentorResolvedCount').textContent = `${resolved} / 4`;
+        }
+
+        function selectOption(cardIdx, optKey) {
+            const otherKey = optKey === 'A' ? 'B' : 'A';
+            const selectedBtn = document.getElementById(`opt-${cardIdx}-${optKey}`);
+            const otherBtn = document.getElementById(`opt-${cardIdx}-${otherKey}`);
+
+            selectedBtn.className = 'flex-1 text-left p-2.5 rounded-lg border border-indigo-500 bg-indigo-50 text-xs font-semibold text-indigo-900 transition';
+            otherBtn.className = 'flex-1 text-left p-2.5 rounded-lg border border-slate-200 bg-white text-xs font-medium text-slate-600 hover:bg-slate-50 transition';
+        }
+
+        // Initialize Everything on Load
+        window.addEventListener('DOMContentLoaded', () => {
+            initCharts();
+            updateRevenueSim();
+            renderCurriculum();
+        });
+    </script>
+</body>
+</html>
