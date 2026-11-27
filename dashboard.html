@@ -6,6 +6,7 @@
     <title>모두의 창업 사업기획 대시보드 | uxan (정유진)</title>
     <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <!-- Chart.js -->
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <!-- Lucide Icons -->
@@ -123,6 +124,10 @@
     <!-- Main Container -->
     <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 space-y-6">
 
+        <section class="bg-white rounded-xl border border-slate-200 px-4 py-2 flex flex-wrap items-center justify-between gap-2 text-xs" aria-label="데이터 저장 상태">
+            <span id="dbStatus" role="status" aria-live="polite" class="text-slate-600">Supabase 연결 중...</span>
+            <button id="dbRetry" type="button" onclick="retryDatabase()" class="hidden px-3 py-1.5 rounded-lg bg-indigo-100 text-indigo-700 font-semibold">다시 시도</button>
+        </section>
         <!-- 4 Core KPI Cards -->
         <section class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
             <!-- KPI 1: Target Market Problem -->
@@ -380,7 +385,7 @@
                                     <label for="priceSlider" class="text-xs sm:text-sm font-semibold text-slate-700">월 구독료 설정 (KRW)</label>
                                     <span id="priceDisplay" class="text-lg font-extrabold text-indigo-600">12,900원</span>
                                 </div>
-                                <input type="range" id="priceSlider" min="5900" max="19900" step="500" value="12900" class="w-full" oninput="updateRevenueSim()">
+                                <input type="range" id="priceSlider" min="5900" max="19900" step="500" value="12900" class="w-full" oninput="updateRevenueSim()" onchange="saveRevenue()">
                                 <div class="flex justify-between text-[11px] text-slate-400 mt-1">
                                     <span>5,900원 (초저가)</span>
                                     <span class="text-emerald-600 font-medium">9,900원 (Q4-1 베타안)</span>
@@ -395,7 +400,7 @@
                                     <label for="subsSlider" class="text-xs sm:text-sm font-semibold text-slate-700">목표 유료 구독자 수 (명)</label>
                                     <span id="subsDisplay" class="text-lg font-extrabold text-emerald-600">200명</span>
                                 </div>
-                                <input type="range" id="subsSlider" min="20" max="500" step="10" value="200" class="w-full" oninput="updateRevenueSim()">
+                                <input type="range" id="subsSlider" min="20" max="500" step="10" value="200" class="w-full" oninput="updateRevenueSim()" onchange="saveRevenue()">
                                 <div class="flex justify-between text-[11px] text-slate-400 mt-1">
                                     <span>20명 (베타 파일럿)</span>
                                     <span class="text-emerald-600 font-medium">100명 (1차 목표)</span>
@@ -946,9 +951,11 @@
         }
 
         function applyPreset(price, subs) {
+            if (!dbReady) return;
             document.getElementById('priceSlider').value = price;
             document.getElementById('subsSlider').value = subs;
             updateRevenueSim();
+            saveRevenue();
         }
 
         // ---------------------------------------------------------
@@ -1007,8 +1014,13 @@
         }
 
         function toggleLesson(index) {
+            if (!dbReady) return;
             mvpLessons[index].completed = !mvpLessons[index].completed;
             renderCurriculum();
+            const lesson = mvpLessons[index];
+            queueSave('lesson_progress', 'user_id,lesson_id', String(lesson.id), {
+                lesson_id: lesson.id, completed: lesson.completed
+            });
         }
 
         function updateCurriculumProgress() {
@@ -1038,8 +1050,16 @@
         // ---------------------------------------------------------
         const mentorStates = [false, false, true, false]; // index 2 starts as resolved hypothesis
 
+        const mentorOptions = ['A', 'A', 'A', 'A'];
+
         function toggleMentorStatus(idx) {
+            if (!dbReady) return;
             mentorStates[idx] = !mentorStates[idx];
+            renderMentorStatus(idx);
+            saveMentor(idx);
+        }
+
+        function renderMentorStatus(idx) {
             const btn = document.getElementById(`m-status-${idx}`);
             if (mentorStates[idx]) {
                 btn.textContent = '방향성 확정완료';
@@ -1053,6 +1073,13 @@
         }
 
         function selectOption(cardIdx, optKey) {
+            if (!dbReady) return;
+            mentorOptions[cardIdx] = optKey;
+            renderMentorOption(cardIdx, optKey);
+            saveMentor(cardIdx);
+        }
+
+        function renderMentorOption(cardIdx, optKey) {
             const otherKey = optKey === 'A' ? 'B' : 'A';
             const selectedBtn = document.getElementById(`opt-${cardIdx}-${optKey}`);
             const otherBtn = document.getElementById(`opt-${cardIdx}-${otherKey}`);
@@ -1061,11 +1088,155 @@
             otherBtn.className = 'flex-1 text-left p-2.5 rounded-lg border border-slate-200 bg-white text-xs font-medium text-slate-600 hover:bg-slate-50 transition';
         }
 
+        // Supabase: 익명 인증 및 사용자별 대시보드 데이터 저장
+        const SUPABASE_URL = 'https://guhfgzysrfgutucysbhc.supabase.co';
+        const SUPABASE_KEY = 'sb_publishable_7kz6HkKUyd5RtEgYHzbxpQ_pR6UfX33';
+        let db = null;
+        let dbUser = null;
+        let dbReady = false;
+        let connecting = false;
+        let saving = false;
+        const pending = new Map();
+
+        function setDbStatus(message, kind = 'normal', retry = false) {
+            const status = document.getElementById('dbStatus');
+            status.textContent = message;
+            status.className = kind === 'error' ? 'text-rose-700 font-semibold' :
+                kind === 'success' ? 'text-emerald-700 font-semibold' : 'text-slate-600';
+            document.getElementById('dbRetry').classList.toggle('hidden', !retry);
+        }
+
+        function enableControls(enabled) {
+            document.querySelectorAll('#priceSlider, #subsSlider, button[onclick^="applyPreset"], button[onclick^="toggleMentorStatus"], button[onclick^="selectOption"]').forEach(el => {
+                el.disabled = !enabled;
+            });
+            document.getElementById('curriculumList').inert = !enabled;
+        }
+
+        function checked(result) {
+            if (result.error) throw result.error;
+            return result.data;
+        }
+
+        function saveRevenue() {
+            if (!dbReady) return;
+            queueSave('revenue_settings', 'user_id', 'revenue', {
+                monthly_price: Number(document.getElementById('priceSlider').value),
+                subscribers: Number(document.getElementById('subsSlider').value)
+            });
+        }
+
+        function saveMentor(idx) {
+            queueSave('mentoring_tasks', 'user_id,task_id', String(idx + 1), {
+                task_id: idx + 1, selected_option: mentorOptions[idx], resolved: mentorStates[idx]
+            });
+        }
+
+        function queueSave(table, conflict, key, values) {
+            if (!dbReady) return;
+            pending.set(`${table}:${key}`, { table, conflict, row: {
+                user_id: dbUser, ...values, updated_at: new Date().toISOString()
+            }});
+            void flushSaves();
+        }
+
+        async function flushSaves() {
+            if (!dbReady || saving || !pending.size) return;
+            saving = true;
+            setDbStatus('Supabase에 저장 중...');
+            try {
+                while (pending.size) {
+                    const [key, job] = pending.entries().next().value;
+                    checked(await db.from(job.table).upsert(job.row, { onConflict: job.conflict }));
+                    if (pending.get(key) === job) pending.delete(key);
+                }
+                setDbStatus('Supabase 연결됨 · 저장 완료', 'success');
+            } catch (error) {
+                console.error('Supabase 저장 실패:', error);
+                setDbStatus('저장 실패: 다시 시도를 누르세요. 새로고침하면 미저장 값이 사라질 수 있습니다.', 'error', true);
+            } finally {
+                saving = false;
+            }
+        }
+
+        async function initializeDatabase() {
+            if (connecting) return;
+            connecting = true;
+            enableControls(false);
+            setDbStatus('Supabase 연결 및 데이터 불러오는 중...');
+            try {
+                if (!db) {
+                    if (!window.supabase) throw new Error('Supabase 라이브러리를 불러오지 못했습니다.');
+                    db = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+                }
+                let session = checked(await db.auth.getSession()).session;
+                if (!session) session = checked(await db.auth.signInAnonymously()).session;
+                if (!session?.user?.id) throw new Error('익명 인증 세션이 없습니다.');
+                dbUser = session.user.id;
+
+                // 최초 접속 시 기존 예시값으로 초기화. 기존 DB 기록은 덮어쓰지 않음.
+                const seeds = await Promise.all([
+                    db.from('revenue_settings').upsert({user_id: dbUser, monthly_price: 12900, subscribers: 200}, {onConflict: 'user_id', ignoreDuplicates: true}),
+                    db.from('lesson_progress').upsert(mvpLessons.map(l => ({user_id: dbUser, lesson_id: l.id, completed: l.id <= 3})), {onConflict: 'user_id,lesson_id', ignoreDuplicates: true}),
+                    db.from('mentoring_tasks').upsert(mentorOptions.map((_, i) => ({user_id: dbUser, task_id: i + 1, selected_option: 'A', resolved: i === 2})), {onConflict: 'user_id,task_id', ignoreDuplicates: true})
+                ]);
+                seeds.forEach(checked);
+                const results = await Promise.all([
+                    db.from('revenue_settings').select('monthly_price,subscribers').eq('user_id', dbUser).single(),
+                    db.from('lesson_progress').select('lesson_id,completed').eq('user_id', dbUser),
+                    db.from('mentoring_tasks').select('task_id,selected_option,resolved').eq('user_id', dbUser)
+                ]);
+                const [revenue, lessons, mentoring] = results.map(checked);
+                document.getElementById('priceSlider').value = revenue.monthly_price;
+                document.getElementById('subsSlider').value = revenue.subscribers;
+                lessons.forEach(row => {
+                    const lesson = mvpLessons.find(l => l.id === row.lesson_id);
+                    if (lesson) lesson.completed = row.completed;
+                });
+                mentoring.forEach(row => {
+                    const i = row.task_id - 1;
+                    if (i >= 0 && i < 4) {
+                        mentorStates[i] = row.resolved;
+                        mentorOptions[i] = row.selected_option;
+                    }
+                });
+                updateRevenueSim();
+                renderCurriculum();
+                mentorStates.forEach((_, i) => {
+                    renderMentorStatus(i);
+                    renderMentorOption(i, mentorOptions[i]);
+                });
+                dbReady = true;
+                enableControls(true);
+                setDbStatus('Supabase 연결됨 · 데이터 불러오기 완료', 'success');
+            } catch (error) {
+                dbReady = false;
+                console.error('Supabase 연결 실패:', error);
+                setDbStatus('연결 실패: 익명 인증, API Key 및 RLS 설정을 확인하세요. ' + (error.message || ''), 'error', true);
+            } finally {
+                connecting = false;
+            }
+        }
+
+        function retryDatabase() {
+            if (dbReady) void flushSaves();
+            else void initializeDatabase();
+        }
+
+        window.addEventListener('beforeunload', event => {
+            if (pending.size) {
+                event.preventDefault();
+                event.returnValue = '';
+            }
+        });
+
         // Initialize Everything on Load
         window.addEventListener('DOMContentLoaded', () => {
+            enableControls(false);
             initCharts();
             updateRevenueSim();
             renderCurriculum();
+            void initializeDatabase();
         });
     </script>
 </body>
